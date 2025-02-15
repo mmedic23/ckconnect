@@ -1,6 +1,5 @@
 package com.cankaratepe.ckconnect.location;
 
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +32,7 @@ public class LocationController {
     public ResponseEntity<LocationDTO> create(@RequestBody CreateLocationDTO location) {
         LocationDTO createdLocation = locationService.create(location);
         return ResponseEntity.created(URI.create("/api/v1/locations/" + createdLocation.id()))
-                             .body(createdLocation);
+                .body(createdLocation);
     }
 
     @PostMapping("/{id}")
@@ -47,8 +46,7 @@ public class LocationController {
         boolean isDeletedSuccessfully = locationService.delete(id);
         if (isDeletedSuccessfully) {
             return ResponseEntity.noContent().build();
-        }
-        else {
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
