@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class RouteServiceImpl implements RouteService {
-    Logger logger = LoggerFactory.getLogger(RouteServiceImpl.class);
+    final Logger logger = LoggerFactory.getLogger(RouteServiceImpl.class);
 
     private final LocationService locationService;
     private final TransportationService transportationService;
