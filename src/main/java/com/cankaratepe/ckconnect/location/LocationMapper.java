@@ -6,16 +6,16 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface LocationMapper {
-    LocationDTO toDTO(LocationEntity locationEntity);
+    LocationDTO toDTO(LocationEntity entity);
 
-    LocationEntity toEntity(LocationDTO locationDTO);
-
-    @Mapping(target = "id", ignore = true)
-    LocationEntity toEntity(CreateLocationDTO locationDTO);
+    LocationEntity toEntity(LocationDTO dto);
 
     @Mapping(target = "id", ignore = true)
-    LocationEntity toEntity(UpdateLocationDTO locationDTO);
+    LocationEntity toEntity(CreateLocationDTO dto);
 
     @Mapping(target = "id", ignore = true)
-    void updateEntityFromDto(UpdateLocationDTO locationDTO, @MappingTarget LocationEntity locationEntity);
+    LocationEntity toEntity(UpdateLocationDTO dto);
+
+    @Mapping(target = "id", ignore = true)
+    void updateEntityFromDto(UpdateLocationDTO dto, @MappingTarget LocationEntity entity);
 }

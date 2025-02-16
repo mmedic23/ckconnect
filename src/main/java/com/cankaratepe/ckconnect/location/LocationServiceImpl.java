@@ -17,8 +17,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public Optional<LocationDTO> get(Long id) {
-        Optional<LocationEntity> foundEntity = locationRepository.findById(id);
-        return foundEntity.map(locationMapper::toDTO);
+        return locationRepository.findById(id).map(locationMapper::toDTO);
     }
 
     @Override
@@ -29,7 +28,6 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public LocationDTO create(CreateLocationDTO locationDTO) {
         LocationEntity newLocation = locationMapper.toEntity(locationDTO);
-        newLocation.setId(null);
         LocationEntity savedLocation = locationRepository.save(newLocation);
         return locationMapper.toDTO(savedLocation);
     }
