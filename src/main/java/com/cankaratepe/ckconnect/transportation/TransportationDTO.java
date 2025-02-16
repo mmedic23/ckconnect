@@ -8,4 +8,8 @@ public record TransportationDTO(
         LocationDTO destination,
         TransportationType type
 ) {
+    @Override
+    public String toString() {
+        return origin.toString() + "--[" + type.toString() + "]->" + destination.toString();
+    }
 }

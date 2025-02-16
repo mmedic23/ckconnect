@@ -7,4 +7,8 @@ public record LocationDTO(
         String city,
         String locationCode
 ) {
+    @Override
+    public String toString() {
+        return locationCode();
+    }
 }
