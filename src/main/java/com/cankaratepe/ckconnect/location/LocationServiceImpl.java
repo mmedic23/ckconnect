@@ -1,5 +1,6 @@
 package com.cankaratepe.ckconnect.location;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,8 +17,10 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public Optional<LocationDTO> get(Long id) {
-        return locationRepository.findById(id).map(locationMapper::toDTO);
+    public LocationDTO get(Long id) {
+        return locationRepository.findById(id)
+                .map(locationMapper::toDTO)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id));
     }
 
     @Override
@@ -33,13 +36,15 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public Optional<LocationDTO> update(Long id, UpdateLocationDTO locationDTO) {
+    public LocationDTO update(Long id, UpdateLocationDTO locationDTO) {
         Optional<LocationEntity> existingEntity = locationRepository.findById(id);
-        return existingEntity.map(entity -> {
-            locationMapper.updateEntityFromDto(locationDTO, entity);
-            LocationEntity updatedEntity = locationRepository.save(entity);
-            return locationMapper.toDTO(updatedEntity);
-        });
+        return existingEntity
+                .map(entity -> {
+                    locationMapper.updateEntityFromDto(locationDTO, entity);
+                    LocationEntity updatedEntity = locationRepository.save(entity);
+                    return locationMapper.toDTO(updatedEntity);
+                })
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id));
     }
 
     @Override

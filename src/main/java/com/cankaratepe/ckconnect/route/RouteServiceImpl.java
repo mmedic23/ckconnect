@@ -5,7 +5,6 @@ import com.cankaratepe.ckconnect.location.LocationService;
 import com.cankaratepe.ckconnect.transportation.TransportationDTO;
 import com.cankaratepe.ckconnect.transportation.TransportationService;
 import com.cankaratepe.ckconnect.transportation.TransportationType;
-import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,14 +27,9 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public List<RouteDTO> findRoutes(Long originId, Long destinationId) {
-        LocationDTO origin = getLocationById(originId);
-        LocationDTO destination = getLocationById(destinationId);
+        LocationDTO origin = locationService.get(originId);
+        LocationDTO destination = locationService.get(destinationId);
         return enumerateRoutes(origin, destination);
-    }
-
-    // TODO Maybe handle the exception
-    private LocationDTO getLocationById(Long id) {
-        return locationService.get(id).orElseThrow(() -> new EntityNotFoundException("Location not found with ID: " + id));
     }
 
     private List<RouteDTO> enumerateRoutes(LocationDTO origin, LocationDTO destination) {

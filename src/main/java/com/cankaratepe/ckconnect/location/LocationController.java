@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/locations")
@@ -24,8 +23,8 @@ public class LocationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<LocationDTO> get(@PathVariable Long id) {
-        Optional<LocationDTO> location = locationService.get(id);
-        return ResponseEntity.of(location);
+        LocationDTO location = locationService.get(id);
+        return ResponseEntity.ok(location);
     }
 
     @PostMapping
@@ -37,8 +36,8 @@ public class LocationController {
 
     @PostMapping("/{id}")
     public ResponseEntity<LocationDTO> update(@PathVariable Long id, @RequestBody UpdateLocationDTO location) {
-        Optional<LocationDTO> updatedLocation = locationService.update(id, location);
-        return ResponseEntity.of(updatedLocation);
+        LocationDTO updatedLocation = locationService.update(id, location);
+        return ResponseEntity.ok(updatedLocation);
     }
 
     @DeleteMapping("/{id}")

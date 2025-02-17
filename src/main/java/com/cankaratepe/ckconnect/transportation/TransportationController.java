@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/transportations")
@@ -24,8 +23,8 @@ public class TransportationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<TransportationDTO> get(@PathVariable Long id) {
-        Optional<TransportationDTO> transportation = transportationService.get(id);
-        return ResponseEntity.of(transportation);
+        TransportationDTO transportation = transportationService.get(id);
+        return ResponseEntity.ok(transportation);
     }
 
     @PostMapping
@@ -37,8 +36,8 @@ public class TransportationController {
 
     @PostMapping("/{id}")
     public ResponseEntity<TransportationDTO> update(@PathVariable Long id, @RequestBody UpdateTransportationDTO transportation) {
-        Optional<TransportationDTO> updatedTransportation = transportationService.update(id, transportation);
-        return ResponseEntity.of(updatedTransportation);
+        TransportationDTO updatedTransportation = transportationService.update(id, transportation);
+        return ResponseEntity.ok(updatedTransportation);
     }
 
     @DeleteMapping("/{id}")

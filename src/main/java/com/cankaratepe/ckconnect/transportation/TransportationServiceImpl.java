@@ -21,8 +21,10 @@ public class TransportationServiceImpl implements TransportationService {
     }
 
     @Override
-    public Optional<TransportationDTO> get(Long id) {
-        return transportationRepository.findById(id).map(transportationMapper::toDTO);
+    public TransportationDTO get(Long id) {
+        return transportationRepository.findById(id)
+                .map(transportationMapper::toDTO)
+                .orElseThrow(() -> new EntityNotFoundException("Transportation not found with ID: " + id));
     }
 
     @Override
@@ -30,11 +32,10 @@ public class TransportationServiceImpl implements TransportationService {
         return transportationRepository.findAll().stream().map(transportationMapper::toDTO).toList();
     }
 
-    // TODO Why can't create return Optional?
     @Override
     public TransportationDTO create(CreateTransportationDTO transportationDTO) {
-        LocationDTO originLocation = getLocationById(transportationDTO.originLocationId());
-        LocationDTO destinationLocation = getLocationById(transportationDTO.destinationLocationId());
+        LocationDTO originLocation = locationService.get(transportationDTO.originLocationId());
+        LocationDTO destinationLocation = locationService.get(transportationDTO.destinationLocationId());
 
         TransportationEntity newTransportation = transportationMapper.toEntity(transportationDTO, originLocation, destinationLocation);
         TransportationEntity savedTransportation = transportationRepository.save(newTransportation);
@@ -42,16 +43,18 @@ public class TransportationServiceImpl implements TransportationService {
     }
 
     @Override
-    public Optional<TransportationDTO> update(Long id, UpdateTransportationDTO transportationDTO) {
+    public TransportationDTO update(Long id, UpdateTransportationDTO transportationDTO) {
         Optional<TransportationEntity> existingEntity = transportationRepository.findById(id);
-        LocationDTO newOriginLocation = getLocationById(transportationDTO.originLocationId());
-        LocationDTO newDestinationLocation = getLocationById(transportationDTO.destinationLocationId());
+        LocationDTO newOriginLocation = locationService.get(transportationDTO.originLocationId());
+        LocationDTO newDestinationLocation = locationService.get(transportationDTO.destinationLocationId());
 
-        return existingEntity.map(entity -> {
-            transportationMapper.updateEntityFromDto(transportationDTO, newOriginLocation, newDestinationLocation, entity);
-            TransportationEntity updatedEntity = transportationRepository.save(entity);
-            return transportationMapper.toDTO(updatedEntity);
-        });
+        return existingEntity
+                .map(entity -> {
+                    transportationMapper.updateEntityFromDto(transportationDTO, newOriginLocation, newDestinationLocation, entity);
+                    TransportationEntity updatedEntity = transportationRepository.save(entity);
+                    return transportationMapper.toDTO(updatedEntity);
+                })
+                .orElseThrow(() -> new EntityNotFoundException("Transportation not found with ID: " + id));
     }
 
     @Override
@@ -61,10 +64,5 @@ public class TransportationServiceImpl implements TransportationService {
             return true;
         }
         return false;
-    }
-
-    // TODO Maybe handle the exception
-    private LocationDTO getLocationById(Long id) {
-        return locationService.get(id).orElseThrow(() -> new EntityNotFoundException("Location not found with ID: " + id));
     }
 }
