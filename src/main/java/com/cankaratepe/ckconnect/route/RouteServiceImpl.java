@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,10 +43,54 @@ public class RouteServiceImpl implements RouteService {
             routeGraph.addTransportation(transportationDTO);
         }
 
-        dfs(origin, destination, routeGraph, new ArrayList<>(), routes);
+        // dfs(origin, destination, routeGraph, new ArrayList<>(), routes);
+
+        searchRoutes(origin, destination, routeGraph, routes);
         return routes;
     }
 
+    private void searchRoutes(LocationDTO origin, LocationDTO destination, RouteGraph routeGraph, List<RouteDTO> routes) {
+        Stack<RouteState> stack = new Stack<>();
+
+        List<TransportationDTO> outgoing = routeGraph.getOutgoingTransports(origin);
+        stack.push(new RouteState(origin, new ArrayList<>(), outgoing.iterator()));
+
+        while (!stack.isEmpty()) {
+            RouteState currentState = stack.peek();
+
+            if (!currentState.outgoingTransports().hasNext()) {
+                stack.pop();
+                continue;
+            }
+
+            TransportationDTO nextOutgoing = currentState.outgoingTransports().next();
+
+            List<TransportationDTO> newPath = new ArrayList<>(currentState.currentPath());
+            newPath.add(nextOutgoing);
+
+            LocationDTO newLocation = nextOutgoing.destination();
+            if (newLocation.equals(destination)) {
+                if (isValidPath(newPath)) {
+                    routes.add(new RouteDTO(routes.size() + 1, newPath.size(), newPath));
+                }
+                continue;
+            }
+
+            if (newPath.size() < 3) {
+                stack.push(new RouteState(
+                        newLocation,
+                        newPath,
+                        routeGraph.getOutgoingTransports(newLocation).iterator()
+                ));
+            }
+        }
+    }
+
+    /**
+     * Find all valid routes between current and destination using Depth-First Search
+     * @deprecated Please use the iterative version {@link RouteServiceImpl#searchRoutes} instead.
+     */
+    @Deprecated
     private void dfs(LocationDTO current, LocationDTO destination, RouteGraph routeGraph, List<TransportationDTO> currentPath, List<RouteDTO> routesToDestination) {
         logger.trace("DFS called with Current: {} Destination: {}", current, destination);
         logger.trace("Current path: {}", currentPath.stream().map(TransportationDTO::toString).collect(Collectors.joining(", ")));
@@ -59,7 +104,7 @@ public class RouteServiceImpl implements RouteService {
 
         if (current.equals(destination)) {
             if (isValidPath(currentPath)) {
-                routesToDestination.add(new RouteDTO(routesToDestination.size(), currentPath.size(), new ArrayList<>(currentPath)));
+                routesToDestination.add(new RouteDTO(routesToDestination.size() + 1, currentPath.size(), new ArrayList<>(currentPath)));
                 return;
             }
         }
