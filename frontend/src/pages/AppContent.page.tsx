@@ -1,6 +1,6 @@
 import { IconBrandMantine, IconLine, IconMapPinFilled, IconRoute2 } from '@tabler/icons-react';
-import { Route, NavLink as RouterNavLink, Routes } from 'react-router-dom';
-import { AppShell, Burger, Group, NavLink, useMantineColorScheme } from '@mantine/core';
+import { Route, NavLink as RouterNavLink, Link as RouterLink, Routes } from 'react-router-dom';
+import { AppShell, Burger, Group, NavLink, Title, Text, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { ColorSchemeToggle } from '@/components/ColorSchemeToggle';
 import { HomePage } from './Home.page';
@@ -24,6 +24,11 @@ export default function AppContent() {
         <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <IconBrandMantine size={30} />
+          <Title className="title" ta="center">
+            <Text inherit variant='gradient' gradient={{ from: 'pink', to: 'yellow' }}>
+              <RouterLink to='/' style={{'textDecoration': 'none'}}>CKCONNECT</RouterLink>
+            </Text>
+          </Title>
           <ColorSchemeToggle handleColorSchemeChanged={setColorScheme} />
         </Group>
       </AppShell.Header>
