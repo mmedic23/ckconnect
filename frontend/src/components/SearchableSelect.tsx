@@ -1,6 +1,6 @@
 // Based on: https://mantine.dev/combobox/?e=SearchableSelect
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CloseButton, Combobox, ScrollArea, TextInput, useCombobox } from '@mantine/core';
 
 interface SearchableSelectItem {
@@ -12,10 +12,12 @@ export function SearchableSelect({
   items,
   label,
   defaultItem,
+  onChange,
 }: {
   items: SearchableSelectItem[];
   label: string;
   defaultItem: SearchableSelectItem | null;
+  onChange: React.ReactEventHandler<HTMLInputElement>;
 }) {
   const [selectedValue, setSelectedValue] = useState<string | null>(
     defaultItem !== null ? defaultItem.value : null
@@ -23,6 +25,11 @@ export function SearchableSelect({
   const [displayValue, setDisplayValue] = useState<string>(
     defaultItem !== null ? defaultItem.display : ''
   );
+
+  useEffect(() => {
+    setSelectedValue(defaultItem !== null ? defaultItem.value : null);
+    setDisplayValue(defaultItem !== null ? defaultItem.display : '');
+  }, [defaultItem]);
 
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -32,6 +39,9 @@ export function SearchableSelect({
     const selected = items.find((opt) => opt.value === value);
     setSelectedValue(value);
     setDisplayValue(selected ? selected.display : '');
+    onChange({
+      target: { value: selected ? selected.value : '' },
+    } as React.ChangeEvent<HTMLInputElement>);
     combobox.closeDropdown();
   };
 
@@ -50,8 +60,7 @@ export function SearchableSelect({
                 size="sm"
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => {
-                  setSelectedValue(null);
-                  setDisplayValue('');
+                  handleSelect(null);
                 }}
                 aria-label="Clear value"
               />
@@ -61,7 +70,7 @@ export function SearchableSelect({
           }
           value={displayValue}
           onChange={(event) => {
-            setDisplayValue(event.currentTarget.value);
+            setDisplayValue(event.currentTarget.value); // Triggers search via re-render
             combobox.openDropdown();
           }}
           onClick={() => combobox.openDropdown()}

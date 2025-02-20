@@ -1,22 +1,61 @@
-import { IconMapPin2 } from '@tabler/icons-react';
-import countries from 'i18n-iso-countries';
-import enLocale from 'i18n-iso-countries/langs/en.json';
-import { Accordion, Flex, Grid, Stack, Text, TextInput } from '@mantine/core';
+import { useEffect, useState } from 'react';
+import { IconPlus } from '@tabler/icons-react';
+import { Accordion, ActionIcon, Grid, Group, Stack, Text } from '@mantine/core';
+import { apiUrl } from '@/Properties';
 import { LocationDto } from '@/types/location';
-import { SearchableSelect } from './SearchableSelect';
+import { LocationDetails } from './LocationDetails';
 
-export function LocationsTable({ data }: { data: LocationDto[] }) {
-  countries.registerLocale(enLocale);
-  const countriesMap = Object.entries(countries.getNames('en', { select: 'official' })).map(
-    ([code, name]) => {
-      return {
-        display: name,
-        value: code,
-      };
+export function LocationsTable() {
+  const [locations, setLocations] = useState<LocationDto[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(`${apiUrl}locations`);
+      if (!response.ok) {
+        console.log(await response.text());
+        return;
+      }
+      const locationsJson = await response.json();
+      setLocations(locationsJson);
+    };
+
+    fetchData();
+  }, []);
+
+  const handleLocationUpdate = async (updatedLocation: LocationDto) => {
+    const response = await fetch(`${apiUrl}locations/${updatedLocation.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedLocation),
+    });
+
+    if (!response.ok) {
+      console.log(await response.text());
+      return; // TODO
     }
-  );
+
+    setLocations((prev) =>
+      prev.map((loc) => (loc.id === updatedLocation.id ? updatedLocation : loc))
+    );
+  };
+
+  const handleLocationDelete = async (deletedLocation: LocationDto) => {
+    const response = await fetch(`${apiUrl}locations/${deletedLocation.id}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      console.log(await response.text());
+      return; // TODO
+    }
+
+    setLocations((prev) => prev.filter((loc) => loc.id !== deletedLocation.id));
+  };
+
   return (
-    <Stack my="lg" gap="xs">
+    <Stack my="lg" gap="xs" pos="relative">
       <Grid ml={60} mr="30%">
         <Grid.Col p={0} span={6}>
           <Text fw={700}>Name</Text>
@@ -28,37 +67,22 @@ export function LocationsTable({ data }: { data: LocationDto[] }) {
           <Text fw={700}>Location Code</Text>
         </Grid.Col>
       </Grid>
+      <ActionIcon pos="absolute" right={3} top={-20} size="input-md" color="lime" radius="xl">
+        <IconPlus />
+      </ActionIcon>
       <Accordion multiple>
-        {data.map((locationDto) => {
-          return (
-            <Accordion.Item key={locationDto.id} value={locationDto.name}>
-              <Accordion.Control icon={<IconMapPin2 />}>
-                <Grid mr="30%">
-                  <Grid.Col span={6}>{locationDto.name}</Grid.Col>
-                  <Grid.Col span={3}>
-                    {locationDto.city}/{locationDto.country}
-                  </Grid.Col>
-                  <Grid.Col span={3}>{locationDto.locationCode}</Grid.Col>
-                </Grid>
-              </Accordion.Control>
-              <Accordion.Panel>
-                <Flex gap="lg" wrap="wrap">
-                  <TextInput label="Name" defaultValue={locationDto.name} />
-                  <TextInput label="Location Code" defaultValue={locationDto.locationCode} />
-                  <TextInput label="City" defaultValue={locationDto.city} />
-                  <SearchableSelect
-                    items={countriesMap}
-                    label="Country"
-                    defaultItem={{
-                      display: countries.getName(locationDto.country, 'en') ?? '',
-                      value: locationDto.country,
-                    }}
-                  />
-                </Flex>
-              </Accordion.Panel>
-            </Accordion.Item>
-          );
-        })}
+        {locations
+          .toSorted((a, b) => a.id - b.id)
+          .map((locationDto) => {
+            return (
+              <LocationDetails
+                key={locationDto.id}
+                locationDto={locationDto}
+                onUpdate={handleLocationUpdate}
+                onDelete={handleLocationDelete}
+              />
+            );
+          })}
       </Accordion>
     </Stack>
   );

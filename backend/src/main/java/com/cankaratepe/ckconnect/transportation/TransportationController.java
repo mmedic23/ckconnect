@@ -34,7 +34,7 @@ public class TransportationController {
                 .body(createdTransportation);
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<TransportationDTO> update(@PathVariable Long id, @RequestBody UpdateTransportationDTO transportation) {
         TransportationDTO updatedTransportation = transportationService.update(id, transportation);
         return ResponseEntity.ok(updatedTransportation);
