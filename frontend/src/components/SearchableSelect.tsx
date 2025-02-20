@@ -27,6 +27,10 @@ export function SearchableSelect({
     setDisplayValue(defaultItem !== null ? defaultItem.display : '');
   }, [defaultItem]);
 
+  useEffect(() => {
+    combobox.selectFirstOption();
+  }, [displayValue])
+
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
