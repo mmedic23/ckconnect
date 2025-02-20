@@ -1,32 +1,29 @@
+import { useEffect, useState } from 'react';
+import { Title } from '@mantine/core';
+import { LocationsTable } from '@/components/LocationsTable';
 import { apiUrl } from '@/Properties';
-import { Anchor, Text, Title } from '@mantine/core';
-import { useEffect } from 'react';
+import { LocationDto } from '@/types/location';
 
 export function Locations() {
+  const [locations, setLocations] = useState<LocationDto[]>([]);
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(apiUrl + 'locations');
-      const locations = await response.json();
-      console.log(locations);
+      const response = await fetch(`${apiUrl}locations`);
+      if (!response.ok) {
+        console.log(await response.text());
+        return;
+      }
+      const locationsJson = await response.json();
+      setLocations(locationsJson);
     };
 
     fetchData();
   }, []);
 
-
   return (
     <>
-      <Title>
-        Locations
-      </Title>
-      <Text c="dimmed" ta="center" size="lg" maw={580} mx="auto" mt="xl">
-        This starter Vite project includes a minimal setup, if you want to learn more on Mantine +
-        Vite integration follow{' '}
-        <Anchor href="https://mantine.dev/guides/vite/" size="lg">
-          this guide
-        </Anchor>
-        . To get started edit pages/Home.page.tsx file.
-      </Text>
+      <Title>Locations</Title>
+      <LocationsTable data={locations} />
     </>
   );
 }

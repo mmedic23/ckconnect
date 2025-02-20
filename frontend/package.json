@@ -16,9 +16,10 @@
   },
   "dependencies": {
     "@mantine/core": "7.17.0",
+    "@mantine/dates": "7.17.0",
     "@mantine/hooks": "7.17.0",
-	"@mantine/dates": "7.17.0",
-	"@tabler/icons-react": "3.30.0",
+    "@tabler/icons-react": "3.30.0",
+    "i18n-iso-countries": "^7.14.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.3"

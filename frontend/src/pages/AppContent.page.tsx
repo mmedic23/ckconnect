@@ -1,6 +1,14 @@
-import { IconBrandMantine, IconLine, IconMapPinFilled, IconRoute2 } from '@tabler/icons-react';
-import { Route, NavLink as RouterNavLink, Link as RouterLink, Routes } from 'react-router-dom';
-import { AppShell, Burger, Group, NavLink, Title, Text, useMantineColorScheme } from '@mantine/core';
+import { IconBrandMantine, IconLine, IconMapPin2, IconRoute2 } from '@tabler/icons-react';
+import { Route, Link as RouterLink, NavLink as RouterNavLink, Routes } from 'react-router-dom';
+import {
+  AppShell,
+  Burger,
+  Group,
+  NavLink,
+  Text,
+  Title,
+  useMantineColorScheme,
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { ColorSchemeToggle } from '@/components/ColorSchemeToggle';
 import { HomePage } from './Home.page';
@@ -17,7 +25,7 @@ export default function AppContent() {
   return (
     <AppShell
       header={{ height: 60 }}
-      navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: !opened } }}
+      navbar={{ width: 300, breakpoint: 'md', collapsed: { mobile: !opened } }}
       padding="md"
     >
       <AppShell.Header>
@@ -25,8 +33,10 @@ export default function AppContent() {
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <IconBrandMantine size={30} />
           <Title className="title" ta="center">
-            <Text inherit variant='gradient' gradient={{ from: 'pink', to: 'yellow' }}>
-              <RouterLink to='/' style={{'textDecoration': 'none'}}>CKCONNECT</RouterLink>
+            <Text inherit variant="gradient" gradient={{ from: 'pink', to: 'yellow' }}>
+              <RouterLink to="/" style={{ textDecoration: 'none' }}>
+                CKCONNECT
+              </RouterLink>
             </Text>
           </Title>
           <ColorSchemeToggle handleColorSchemeChanged={setColorScheme} />
@@ -37,7 +47,7 @@ export default function AppContent() {
           component={RouterNavLink}
           to="/locations"
           label="Locations"
-          leftSection={<IconMapPinFilled />}
+          leftSection={<IconMapPin2 />}
         />
         <NavLink
           component={RouterNavLink}
