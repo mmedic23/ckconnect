@@ -19,12 +19,8 @@ export function SearchableSelect({
   defaultItem: SearchableSelectItem | null;
   onChange: React.ReactEventHandler<HTMLInputElement>;
 }) {
-  const [selectedValue, setSelectedValue] = useState<string | null>(
-    defaultItem !== null ? defaultItem.value : null
-  );
-  const [displayValue, setDisplayValue] = useState<string>(
-    defaultItem !== null ? defaultItem.display : ''
-  );
+  const [selectedValue, setSelectedValue] = useState<string | null>(defaultItem !== null ? defaultItem.value : null);
+  const [displayValue, setDisplayValue] = useState<string>(defaultItem !== null ? defaultItem.display : '');
 
   useEffect(() => {
     setSelectedValue(defaultItem !== null ? defaultItem.value : null);
@@ -45,9 +41,7 @@ export function SearchableSelect({
     combobox.closeDropdown();
   };
 
-  const filteredItems = items.filter((item) =>
-    item.display.toLowerCase().includes(displayValue.toLowerCase())
-  );
+  const filteredItems = items.filter((item) => item.display.toLowerCase().includes(displayValue.toLowerCase()));
 
   return (
     <Combobox store={combobox} onOptionSubmit={handleSelect}>

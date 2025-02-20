@@ -37,9 +37,7 @@ export function LocationsTable() {
       return; // TODO
     }
 
-    setLocations((prev) =>
-      prev.map((loc) => (loc.id === updatedLocation.id ? updatedLocation : loc))
-    );
+    setLocations((prev) => prev.map((loc) => (loc.id === updatedLocation.id ? updatedLocation : loc)));
   };
 
   const handleLocationDelete = async (deletedLocation: LocationDto) => {
@@ -61,7 +59,7 @@ export function LocationsTable() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(createdLocation)
+      body: JSON.stringify(createdLocation),
     });
 
     if (!response.ok) {
@@ -74,7 +72,7 @@ export function LocationsTable() {
 
     setLocations((prev) => [...prev, createdLocation]);
     setIsCreatingLocation(false);
-  }
+  };
 
   return (
     <Stack my="lg" gap="xs" pos="relative">
@@ -98,22 +96,25 @@ export function LocationsTable() {
             .toSorted((a, b) => a.id - b.id)
             .map((locationDto) => {
               return (
-                <LocationDetails
-                  key={locationDto.id}
-                  locationDto={locationDto}
-                  onUpdate={handleLocationUpdate}
-                  onDelete={handleLocationDelete}
-                />
+                <LocationDetails key={locationDto.id} locationDto={locationDto} onUpdate={handleLocationUpdate} onDelete={handleLocationDelete} />
               );
             })}
-          {isCreatingLocation &&
-            (<LocationDetails
-              key='new_location'
-              locationDto={{ id: -1, name: 'New Location', city: '-', country: '-', locationCode: '-' }}
+          {isCreatingLocation && (
+            <LocationDetails
+              key="new_location"
+              locationDto={{
+                id: -1,
+                name: 'New Location',
+                city: '-',
+                country: '-',
+                locationCode: '-',
+              }}
               onUpdate={handleLocationCreate}
-              onDelete={async () => { setIsCreatingLocation(false); }}
+              onDelete={async () => {
+                setIsCreatingLocation(false);
+              }}
             />
-            )}
+          )}
         </>
       </Accordion>
     </Stack>

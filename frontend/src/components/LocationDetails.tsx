@@ -1,12 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  IconCancel,
-  IconCheck,
-  IconDeviceFloppy,
-  IconMapPin2,
-  IconRestore,
-  IconTrash,
-} from '@tabler/icons-react';
+import { IconCancel, IconCheck, IconDeviceFloppy, IconMapPin2, IconRestore, IconTrash } from '@tabler/icons-react';
 import countries from 'i18n-iso-countries';
 import enLocale from 'i18n-iso-countries/langs/en.json';
 import { Accordion, ActionIcon, Flex, Grid, Group, TextInput } from '@mantine/core';
@@ -14,14 +7,12 @@ import { LocationDto } from '@/types/location';
 import { SearchableSelect } from './SearchableSelect';
 
 countries.registerLocale(enLocale);
-const countriesMap = Object.entries(countries.getNames('en', { select: 'official' })).map(
-  ([code, name]) => {
-    return {
-      display: name,
-      value: code,
-    };
-  }
-);
+const countriesMap = Object.entries(countries.getNames('en', { select: 'official' })).map(([code, name]) => {
+  return {
+    display: name,
+    value: code,
+  };
+});
 console.log('Render!');
 
 export function LocationDetails({
@@ -44,14 +35,13 @@ export function LocationDetails({
     setHeaderLocation(locationDto);
   }, [locationDto]);
 
-  const handleChange =
-    (field: keyof LocationDto) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      setLocation((prev) => ({
-        ...prev,
-        [field]: event.target.value,
-      }));
-      setHasUnsavedChanges(true);
-    };
+  const handleChange = (field: keyof LocationDto) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLocation((prev) => ({
+      ...prev,
+      [field]: event.target.value,
+    }));
+    setHasUnsavedChanges(true);
+  };
 
   const handleSubmit = async () => {
     setIsUpdating(true);
@@ -96,11 +86,7 @@ export function LocationDetails({
       <Accordion.Panel>
         <Flex gap="lg" wrap="wrap">
           <TextInput label="Name" value={location.name} onChange={handleChange('name')} />
-          <TextInput
-            label="Location Code"
-            value={location.locationCode}
-            onChange={handleChange('locationCode')}
-          />
+          <TextInput label="Location Code" value={location.locationCode} onChange={handleChange('locationCode')} />
           <TextInput label="City" value={location.city} onChange={handleChange('city')} />
           <SearchableSelect
             items={countriesMap}
@@ -112,44 +98,18 @@ export function LocationDetails({
             onChange={handleChange('country')}
           />
           <Group gap="xs">
-            <ActionIcon
-              size="input-md"
-              mt="auto"
-              color="lime"
-              loading={isUpdating}
-              disabled={!hasUnsavedChanges}
-              onClick={handleSubmit}
-            >
+            <ActionIcon size="input-md" mt="auto" color="lime" loading={isUpdating} disabled={!hasUnsavedChanges} onClick={handleSubmit}>
               <IconDeviceFloppy />
             </ActionIcon>
-            <ActionIcon
-              size="input-md"
-              mt="auto"
-              color="blue"
-              loading={isUpdating}
-              disabled={!hasUnsavedChanges}
-              onClick={resetEditorState}
-            >
+            <ActionIcon size="input-md" mt="auto" color="blue" loading={isUpdating} disabled={!hasUnsavedChanges} onClick={resetEditorState}>
               <IconRestore />
             </ActionIcon>
             {isConfirmingDelete ? (
               <>
-                <ActionIcon
-                  size="input-md"
-                  mt="auto"
-                  color="cyan"
-                  loading={isUpdating}
-                  onClick={handleDeleteCancel}
-                >
+                <ActionIcon size="input-md" mt="auto" color="cyan" loading={isUpdating} onClick={handleDeleteCancel}>
                   <IconCancel />
                 </ActionIcon>
-                <ActionIcon
-                  size="input-md"
-                  mt="auto"
-                  color="red"
-                  loading={isUpdating}
-                  onClick={handleDeleteConfirm}
-                >
+                <ActionIcon size="input-md" mt="auto" color="red" loading={isUpdating} onClick={handleDeleteConfirm}>
                   <IconCheck />
                 </ActionIcon>
               </>
