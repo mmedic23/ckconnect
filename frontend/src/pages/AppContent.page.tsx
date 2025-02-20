@@ -32,9 +32,9 @@ export default function AppContent() {
         </Group>
       </AppShell.Header>
       <AppShell.Navbar p="md">
-        <NavLink component={RouterNavLink} to="/locations" label="Locations" leftSection={<IconMapPin2 />} />
-        <NavLink component={RouterNavLink} to="/transportations" label="Transportations" leftSection={<IconLine />} />
-        <NavLink component={RouterNavLink} to="/routes" label="Routes" leftSection={<IconRoute2 />} />
+        <NavLink component={RouterNavLink} to="/locations" onClick={toggle} label="Locations" leftSection={<IconMapPin2 />} />
+        <NavLink component={RouterNavLink} to="/transportations" onClick={toggle} label="Transportations" leftSection={<IconLine />} />
+        <NavLink component={RouterNavLink} to="/routes" onClick={toggle} label="Routes" leftSection={<IconRoute2 />} />
         <Box hiddenFrom="xs" mt="auto">
           <ColorSchemeToggle value={colorScheme} handleColorSchemeChanged={setColorScheme} />
         </Box>
