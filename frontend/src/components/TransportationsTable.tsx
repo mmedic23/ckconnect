@@ -1,5 +1,5 @@
 import { apiUrl } from "@/Properties";
-import { LocationDto } from "@/types/location";
+import { LocationDto, LocationsMap } from "@/types/location";
 import { RichTransportationDto, TransportationDto } from "@/types/transportation";
 import { Accordion, ActionIcon, Grid, Stack, Text } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
@@ -9,7 +9,7 @@ import TransportationDetails from "./TransportationDetails";
 
 export function TransportationsTable() {
     const [transportations, setTransportations] = useState<TransportationDto[]>([]);
-    const [locations, setLocations] = useState<{ [id: number]: LocationDto }>({});
+    const [locations, setLocations] = useState<LocationsMap>({});
     const [isCreatingTransportation, setIsCreatingTransportation] = useState(false);
     const [openedItems, setOpenedItems] = useState<string[]>([]);
 
@@ -44,7 +44,7 @@ export function TransportationsTable() {
             const locationsMap = locationsJson.reduce((acc, location) => {
                 acc[location.id] = location;
                 return acc;
-            }, {} as { [id: number]: LocationDto });
+            }, {} as LocationsMap);
             setLocations(locationsMap);
         }
 

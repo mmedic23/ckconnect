@@ -5,3 +5,5 @@ export interface LocationDto {
   city: string;
   locationCode: string;
 }
+
+export type LocationsMap = { [id: number]: LocationDto }

@@ -2,8 +2,23 @@
 
 import { useEffect, useState } from 'react';
 import { CloseButton, Combobox, ScrollArea, TextInput, useCombobox } from '@mantine/core';
+import { LocationsMap } from '@/types/location';
 
-interface SearchableSelectItem {
+export function createOptionsFromLocationsMap(map: LocationsMap): SearchableSelectItem[] {
+  return Object.entries(map)
+    .map(a => a[1])
+    .toSorted((a, b) => a.id - b.id)
+    .map((loc) => { return ({ 'display': loc.name, 'value': loc.id?.toString() }) });
+}
+
+export const transportTypeOptions = [
+  { 'display': 'FLIGHT', 'value': 'FLIGHT' },
+  { 'display': 'BUS', 'value': 'BUS' },
+  { 'display': 'SUBWAY', 'value': 'SUBWAY' },
+  { 'display': 'UBER', 'value': 'UBER' },
+]
+
+export interface SearchableSelectItem {
   value: string;
   display: string;
 }

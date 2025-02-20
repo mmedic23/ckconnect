@@ -1,9 +1,9 @@
 import { TransportationDto } from "@/types/transportation"
 import { Accordion, ActionIcon, Flex, Grid, Group, TextInput } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { SearchableSelect } from "./SearchableSelect";
+import { createOptionsFromLocationsMap, SearchableSelect, transportTypeOptions } from "./SearchableSelect";
 import { IconCancel, IconCheck, IconDeviceFloppy, IconLine, IconRestore, IconTrash } from "@tabler/icons-react";
-import { LocationDto } from "@/types/location";
+import { LocationDto, LocationsMap } from "@/types/location";
 
 
 export default function TransportationDetails({
@@ -13,7 +13,7 @@ export default function TransportationDetails({
     onDelete,
 }: {
     transportationDto: TransportationDto;
-    locationsMap: { [id: number]: LocationDto };
+    locationsMap: LocationsMap;
     onUpdate: (updatedTransportation: TransportationDto) => Promise<void>;
     onDelete: (deletedTransportation: TransportationDto) => Promise<void>;
 }) {
@@ -65,17 +65,7 @@ export default function TransportationDetails({
         setHasUnsavedChanges(false);
     }
 
-    const locationOptions = Object.entries(locationsMap)
-        .map(a => a[1])
-        .toSorted((a, b) => a.id - b.id)
-        .map((loc) => { return ({ 'display': loc.name, 'value': loc.id?.toString() }) });
-
-    const typeOptions = [
-        { 'display': 'FLIGHT', 'value': 'FLIGHT' },
-        { 'display': 'BUS', 'value': 'BUS' },
-        { 'display': 'SUBWAY', 'value': 'SUBWAY' },
-        { 'display': 'UBER', 'value': 'UBER' },
-    ]
+    const locationOptions = createOptionsFromLocationsMap(locationsMap);
 
     return (
         <Accordion.Item key={headerTransportation.id} value={headerTransportation.id?.toString()}>
@@ -100,7 +90,7 @@ export default function TransportationDetails({
                         onChange={handleChange('originLocationId')}
                     />
                     <SearchableSelect
-                        items={typeOptions}
+                        items={transportTypeOptions}
                         label="Type"
                         defaultItem={{
                             display: transportation.type,
