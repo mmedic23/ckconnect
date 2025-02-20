@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Button, Flex, Skeleton, Stack, Title } from '@mantine/core';
+import { IconArrowNarrowRightDashed, IconArrowRightDashed, IconBrandUber, IconBus, IconPlane, IconTrain } from '@tabler/icons-react';
+import { Button, Flex, NavLink, Skeleton, Stack, Text, Title } from '@mantine/core';
 import { apiUrl } from '@/Properties';
 import { LocationDto, LocationsMap } from '@/types/location';
 import { FindRouteResponse } from '@/types/route';
@@ -11,6 +12,8 @@ export function RoutesTable() {
   const [destinationLocation, setDestinationLocation] = useState<LocationDto | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const [foundRoutes, setFoundRoutes] = useState<FindRouteResponse | undefined>();
+
+  const [selectedRoute, setSelectedRoute] = useState(-1);
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -40,9 +43,10 @@ export function RoutesTable() {
     if (originLocation === undefined || destinationLocation === undefined) {
       return;
     }
+    setSelectedRoute(-1);
     setFoundRoutes(undefined);
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // TODO for debug, remove me!
     const routesResponse = await fetch(`${apiUrl}routes?originId=${originLocation.id}&destinationId=${destinationLocation.id}`);
     if (!routesResponse.ok) {
       console.log(await routesResponse.text());
@@ -54,8 +58,8 @@ export function RoutesTable() {
 
   const locationOptions: SearchableSelectItem[] = createOptionsFromLocationsMap(locations);
   return (
-    <Stack gap="xs">
-      <Flex gap="md" p="md" ml="md">
+    <Stack gap="xs" w={650}>
+      <Flex gap="md" p="md" ml="md" wrap="wrap">
         <SearchableSelect
           key="search-origin"
           label="Origin"
@@ -70,7 +74,13 @@ export function RoutesTable() {
           defaultItem={null}
           onChange={handleSearchInputChanged('destination')}
         />
-        <Button color="blue" mt="auto" disabled={originLocation === undefined || destinationLocation === undefined} onClick={handleSearchClick}>
+        <Button
+          color="blue"
+          mt="auto"
+          loading={isLoading}
+          disabled={originLocation === undefined || destinationLocation === undefined}
+          onClick={handleSearchClick}
+        >
           Search
         </Button>{' '}
       </Flex>
@@ -88,13 +98,41 @@ export function RoutesTable() {
       )}
       {foundRoutes && (foundRoutes.numberOfRoutesFound === 0 || foundRoutes.routes.length === 0) ? <Title>No results found!</Title> : <></>}
       {foundRoutes && foundRoutes.numberOfRoutesFound > 0 && foundRoutes.routes.length > 0 ? (
-        foundRoutes.routes.map((routeDto) => {
-          return (
-            <Button variant="outline" key={routeDto.order}>
-              Via {routeDto.legs.find((t) => t.type === 'FLIGHT')?.origin.name}
-            </Button>
-          );
-        })
+        <>
+          <Title order={2} fw={400}>
+            Found routes
+          </Title>
+          <Stack gap={0} justify="flex-start" align="flex-start">
+            {foundRoutes.routes.map((routeDto) => {
+              return (
+                <NavLink
+                  key={routeDto.order}
+                  active={selectedRoute === routeDto.order}
+                  onClick={() => setSelectedRoute(routeDto.order)}
+                  label={(() => {
+                    const flightLeg = routeDto.legs.find((t) => t.type === 'FLIGHT');
+                    return flightLeg ? `Via ${flightLeg.origin.name} (${flightLeg.origin.locationCode})` : '';
+                  })()}
+                  rightSection={(() => {
+                    const typeIcons = {
+                      FLIGHT: <IconPlane stroke={1.5} />,
+                      BUS: <IconBus stroke={1.5} />,
+                      SUBWAY: <IconTrain stroke={1.5} />,
+                      UBER: <IconBrandUber stroke={1.5} />,
+                    };
+                    const transportTypeIcons = routeDto.legs.flatMap((t, index) =>
+                      index === 0 ? [typeIcons[t.type]] : [<Text>{t.origin.locationCode}</Text>, typeIcons[t.type]]
+                    );
+                    const transportIconsWithSeparators = transportTypeIcons.flatMap((icon, index) =>
+                      index === transportTypeIcons.length - 1 ? [icon] : [icon, <IconArrowNarrowRightDashed stroke={1.5} />]
+                    );
+                    return transportIconsWithSeparators;
+                  })()}
+                />
+              );
+            })}
+          </Stack>
+        </>
       ) : (
         <></>
       )}

@@ -1,4 +1,4 @@
-import { createTheme, MantineThemeOverride } from '@mantine/core';
+import { createTheme, MantineThemeOverride, NavLink } from '@mantine/core';
 
 export const theme = createTheme({
   primaryColor: 'orange',
@@ -10,5 +10,12 @@ export const theme = createTheme({
         },
       }),
     },
+    NavLink: {
+      styles: (theme: MantineThemeOverride) => ({
+        label: {
+          fontSize: 16
+        }
+      })
+    }
   },
 });
