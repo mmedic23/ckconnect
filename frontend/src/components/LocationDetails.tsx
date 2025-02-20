@@ -13,7 +13,6 @@ const countriesMap = Object.entries(countries.getNames('en', { select: 'official
     value: code,
   };
 });
-console.log('Render!');
 
 export function LocationDetails({
   locationDto,

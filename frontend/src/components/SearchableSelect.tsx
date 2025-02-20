@@ -42,7 +42,12 @@ export function SearchableSelect({
     onChange({
       target: { value: selected ? selected.value : '' },
     } as React.ChangeEvent<HTMLInputElement>);
-    combobox.closeDropdown();
+    if (value !== null) {
+      combobox.closeDropdown();
+    }
+    else {
+      combobox.openDropdown();
+    }
   };
 
   const filteredItems = items.filter((item) => item.display.toLowerCase().includes(displayValue.toLowerCase()));

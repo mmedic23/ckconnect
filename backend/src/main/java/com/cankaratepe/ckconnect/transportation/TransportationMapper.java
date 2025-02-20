@@ -1,6 +1,7 @@
 package com.cankaratepe.ckconnect.transportation;
 
 import com.cankaratepe.ckconnect.location.LocationDTO;
+import com.cankaratepe.ckconnect.location.LocationEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -23,9 +24,9 @@ public interface TransportationMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "transportationType", source = "dto.type")
-    TransportationEntity toEntity(CreateTransportationDTO dto, LocationDTO originLocation, LocationDTO destinationLocation);
+    TransportationEntity toEntity(CreateTransportationDTO dto, LocationEntity originLocation, LocationEntity destinationLocation);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "transportationType", source = "dto.type")
-    void updateEntityFromDto(UpdateTransportationDTO dto, LocationDTO originLocation, LocationDTO destinationLocation, @MappingTarget TransportationEntity entity);
+    void updateEntityFromDto(UpdateTransportationDTO dto, LocationEntity originLocation, LocationEntity destinationLocation, @MappingTarget TransportationEntity entity);
 }

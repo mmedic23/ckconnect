@@ -8,6 +8,7 @@ import { LocationDetails } from './LocationDetails';
 export function LocationsTable() {
   const [locations, setLocations] = useState<LocationDto[]>([]);
   const [isCreatingLocation, setIsCreatingLocation] = useState(false);
+  const [openedItems, setOpenedItems] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,6 +23,12 @@ export function LocationsTable() {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (isCreatingLocation) {
+      setOpenedItems((prev) => [...prev, '-1']);
+    }
+  }, [isCreatingLocation]);
 
   const handleLocationUpdate = async (updatedLocation: LocationDto) => {
     const response = await fetch(`${apiUrl}locations/${updatedLocation.id}`, {
@@ -87,10 +94,10 @@ export function LocationsTable() {
           <Text fw={700}>Location Code</Text>
         </Grid.Col>
       </Grid>
-      <ActionIcon pos="absolute" right={3} top={-20} size="input-md" color="lime" radius="xl" onClick={() => setIsCreatingLocation(true)}>
+      <ActionIcon pos="absolute" right={3} top={-30} size="input-md" color="lime" radius="xl" disabled={isCreatingLocation} onClick={() => setIsCreatingLocation(true)}>
         <IconPlus />
       </ActionIcon>
-      <Accordion multiple defaultValue={isCreatingLocation ? [(-1).toString()] : undefined}>
+      <Accordion multiple value={openedItems} onChange={setOpenedItems}>
         <>
           {locations
             .toSorted((a, b) => a.id - b.id)

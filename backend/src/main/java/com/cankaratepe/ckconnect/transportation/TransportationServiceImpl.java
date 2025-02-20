@@ -1,6 +1,8 @@
 package com.cankaratepe.ckconnect.transportation;
 
 import com.cankaratepe.ckconnect.location.LocationDTO;
+import com.cankaratepe.ckconnect.location.LocationEntity;
+import com.cankaratepe.ckconnect.location.LocationRepository;
 import com.cankaratepe.ckconnect.location.LocationService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -12,12 +14,12 @@ import java.util.Optional;
 public class TransportationServiceImpl implements TransportationService {
     private final TransportationRepository transportationRepository;
     private final TransportationMapper transportationMapper;
-    private final LocationService locationService;
+    private final LocationRepository locationRepository;
 
-    public TransportationServiceImpl(TransportationRepository transportationRepository, TransportationMapper transportationMapper, LocationService locationService) {
+    public TransportationServiceImpl(TransportationRepository transportationRepository, TransportationMapper transportationMapper, LocationRepository locationRepository) {
         this.transportationRepository = transportationRepository;
         this.transportationMapper = transportationMapper;
-        this.locationService = locationService;
+        this.locationRepository = locationRepository;
     }
 
     @Override
@@ -34,10 +36,10 @@ public class TransportationServiceImpl implements TransportationService {
 
     @Override
     public TransportationDTO create(CreateTransportationDTO transportationDTO) {
-        LocationDTO originLocation = locationService.get(transportationDTO.originLocationId());
-        LocationDTO destinationLocation = locationService.get(transportationDTO.destinationLocationId());
+        LocationEntity newOrigin = locationRepository.findById(transportationDTO.originLocationId()).orElseThrow(() -> new EntityNotFoundException("Location not found with ID: " + transportationDTO.originLocationId()));
+        LocationEntity newDestination = locationRepository.findById(transportationDTO.destinationLocationId()).orElseThrow(() -> new EntityNotFoundException("Location not found with ID: " + transportationDTO.destinationLocationId()));
 
-        TransportationEntity newTransportation = transportationMapper.toEntity(transportationDTO, originLocation, destinationLocation);
+        TransportationEntity newTransportation = transportationMapper.toEntity(transportationDTO, newOrigin, newDestination);
         TransportationEntity savedTransportation = transportationRepository.save(newTransportation);
         return transportationMapper.toDTO(savedTransportation);
     }
@@ -45,12 +47,13 @@ public class TransportationServiceImpl implements TransportationService {
     @Override
     public TransportationDTO update(Long id, UpdateTransportationDTO transportationDTO) {
         Optional<TransportationEntity> existingEntity = transportationRepository.findById(id);
-        LocationDTO newOriginLocation = locationService.get(transportationDTO.originLocationId());
-        LocationDTO newDestinationLocation = locationService.get(transportationDTO.destinationLocationId());
+
+        LocationEntity newOrigin = locationRepository.findById(transportationDTO.originLocationId()).orElseThrow(() -> new EntityNotFoundException("Location not found with ID: " + transportationDTO.originLocationId()));
+        LocationEntity newDestination = locationRepository.findById(transportationDTO.destinationLocationId()).orElseThrow(() -> new EntityNotFoundException("Location not found with ID: " + transportationDTO.destinationLocationId()));
 
         return existingEntity
                 .map(entity -> {
-                    transportationMapper.updateEntityFromDto(transportationDTO, newOriginLocation, newDestinationLocation, entity);
+                    transportationMapper.updateEntityFromDto(transportationDTO, newOrigin, newDestination, entity);
                     TransportationEntity updatedEntity = transportationRepository.save(entity);
                     return transportationMapper.toDTO(updatedEntity);
                 })
