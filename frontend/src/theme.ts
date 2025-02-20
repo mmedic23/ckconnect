@@ -1,4 +1,4 @@
-import { createTheme, MantineThemeOverride, TextInput } from '@mantine/core';
+import { createTheme, MantineThemeOverride } from '@mantine/core';
 
 export const theme = createTheme({
   primaryColor: 'orange',

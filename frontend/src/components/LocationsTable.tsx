@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { IconPlus } from '@tabler/icons-react';
-import { Accordion, ActionIcon, Grid, Group, Stack, Text } from '@mantine/core';
+import { Accordion, ActionIcon, Grid, Stack, Text } from '@mantine/core';
 import { apiUrl } from '@/Properties';
 import { LocationDto } from '@/types/location';
 import { LocationDetails } from './LocationDetails';
@@ -75,7 +75,7 @@ export function LocationsTable() {
     }
 
     const responseJson = await response.json();
-    createdLocation.id = responseJson['id'];
+    createdLocation.id = responseJson.id;
 
     setLocations((prev) => [...prev, createdLocation]);
     setIsCreatingLocation(false);
@@ -94,7 +94,16 @@ export function LocationsTable() {
           <Text fw={700}>Location Code</Text>
         </Grid.Col>
       </Grid>
-      <ActionIcon pos="absolute" right={3} top={-30} size="input-md" color="lime" radius="xl" disabled={isCreatingLocation} onClick={() => setIsCreatingLocation(true)}>
+      <ActionIcon
+        pos="absolute"
+        right={3}
+        top={-30}
+        size="input-md"
+        color="lime"
+        radius="xl"
+        disabled={isCreatingLocation}
+        onClick={() => setIsCreatingLocation(true)}
+      >
         <IconPlus />
       </ActionIcon>
       <Accordion multiple value={openedItems} onChange={setOpenedItems}>

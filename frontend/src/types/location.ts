@@ -6,4 +6,4 @@ export interface LocationDto {
   locationCode: string;
 }
 
-export type LocationsMap = { [id: number]: LocationDto }
+export type LocationsMap = { [id: number]: LocationDto };

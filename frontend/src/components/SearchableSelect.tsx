@@ -6,17 +6,19 @@ import { LocationsMap } from '@/types/location';
 
 export function createOptionsFromLocationsMap(map: LocationsMap): SearchableSelectItem[] {
   return Object.entries(map)
-    .map(a => a[1])
+    .map((a) => a[1])
     .toSorted((a, b) => a.id - b.id)
-    .map((loc) => { return ({ 'display': loc.name, 'value': loc.id?.toString() }) });
+    .map((loc) => {
+      return { display: loc.name, value: loc.id?.toString() };
+    });
 }
 
 export const transportTypeOptions = [
-  { 'display': 'FLIGHT', 'value': 'FLIGHT' },
-  { 'display': 'BUS', 'value': 'BUS' },
-  { 'display': 'SUBWAY', 'value': 'SUBWAY' },
-  { 'display': 'UBER', 'value': 'UBER' },
-]
+  { display: 'FLIGHT', value: 'FLIGHT' },
+  { display: 'BUS', value: 'BUS' },
+  { display: 'SUBWAY', value: 'SUBWAY' },
+  { display: 'UBER', value: 'UBER' },
+];
 
 export interface SearchableSelectItem {
   value: string;
@@ -44,7 +46,7 @@ export function SearchableSelect({
 
   useEffect(() => {
     combobox.selectFirstOption();
-  }, [displayValue])
+  }, [displayValue]);
 
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -59,8 +61,7 @@ export function SearchableSelect({
     } as React.ChangeEvent<HTMLInputElement>);
     if (value !== null) {
       combobox.closeDropdown();
-    }
-    else {
+    } else {
       combobox.openDropdown();
     }
   };
