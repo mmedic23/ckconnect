@@ -2,6 +2,7 @@ import { IconBrandMantine, IconLine, IconMapPin2, IconRoute2 } from '@tabler/ico
 import { Route, Link as RouterLink, NavLink as RouterNavLink, Routes } from 'react-router-dom';
 import {
   AppShell,
+  Box,
   Burger,
   Group,
   NavLink,
@@ -17,7 +18,7 @@ import { RouteSearch } from './Routes.page';
 import { Transportations } from './Transportations.page';
 
 export default function AppContent() {
-  const { setColorScheme } = useMantineColorScheme({
+  const { colorScheme, setColorScheme } = useMantineColorScheme({
     keepTransitions: true,
   });
   const [opened, { toggle }] = useDisclosure();
@@ -25,13 +26,12 @@ export default function AppContent() {
   return (
     <AppShell
       header={{ height: 60 }}
-      navbar={{ width: 300, breakpoint: 'md', collapsed: { mobile: !opened } }}
+      navbar={{ width: 300, breakpoint: 'lg', collapsed: { mobile: !opened } }}
       padding="md"
     >
       <AppShell.Header>
         <Group h="100%" px="md">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <IconBrandMantine size={30} />
+          <Burger opened={opened} onClick={toggle} hiddenFrom="lg" size="sm" />
           <Title className="title" ta="center">
             <Text inherit variant="gradient" gradient={{ from: 'pink', to: 'yellow' }}>
               <RouterLink to="/" style={{ textDecoration: 'none' }}>
@@ -39,7 +39,9 @@ export default function AppContent() {
               </RouterLink>
             </Text>
           </Title>
-          <ColorSchemeToggle handleColorSchemeChanged={setColorScheme} />
+          <Box visibleFrom="xs" ml="auto">
+            <ColorSchemeToggle value={colorScheme} handleColorSchemeChanged={setColorScheme} />
+          </Box>
         </Group>
       </AppShell.Header>
       <AppShell.Navbar p="md">
@@ -61,6 +63,9 @@ export default function AppContent() {
           label="Routes"
           leftSection={<IconRoute2 />}
         />
+        <Box hiddenFrom="xs" mt="auto">
+          <ColorSchemeToggle value={colorScheme} handleColorSchemeChanged={setColorScheme} />
+        </Box>
       </AppShell.Navbar>
       <AppShell.Main>
         <Routes>
