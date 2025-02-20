@@ -7,6 +7,7 @@ import { LocationDetails } from './LocationDetails';
 
 export function LocationsTable() {
   const [locations, setLocations] = useState<LocationDto[]>([]);
+  const [isCreatingLocation, setIsCreatingLocation] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,6 +55,27 @@ export function LocationsTable() {
     setLocations((prev) => prev.filter((loc) => loc.id !== deletedLocation.id));
   };
 
+  const handleLocationCreate = async (createdLocation: LocationDto) => {
+    const response = await fetch(`${apiUrl}locations`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(createdLocation)
+    });
+
+    if (!response.ok) {
+      console.log(await response.text());
+      return; // TODO
+    }
+
+    const responseJson = await response.json();
+    createdLocation.id = responseJson['id'];
+
+    setLocations((prev) => [...prev, createdLocation]);
+    setIsCreatingLocation(false);
+  }
+
   return (
     <Stack my="lg" gap="xs" pos="relative">
       <Grid ml={60} mr="30%">
@@ -67,22 +89,32 @@ export function LocationsTable() {
           <Text fw={700}>Location Code</Text>
         </Grid.Col>
       </Grid>
-      <ActionIcon pos="absolute" right={3} top={-20} size="input-md" color="lime" radius="xl">
+      <ActionIcon pos="absolute" right={3} top={-20} size="input-md" color="lime" radius="xl" onClick={() => setIsCreatingLocation(true)}>
         <IconPlus />
       </ActionIcon>
-      <Accordion multiple>
-        {locations
-          .toSorted((a, b) => a.id - b.id)
-          .map((locationDto) => {
-            return (
-              <LocationDetails
-                key={locationDto.id}
-                locationDto={locationDto}
-                onUpdate={handleLocationUpdate}
-                onDelete={handleLocationDelete}
-              />
-            );
-          })}
+      <Accordion multiple defaultValue={isCreatingLocation ? [(-1).toString()] : undefined}>
+        <>
+          {locations
+            .toSorted((a, b) => a.id - b.id)
+            .map((locationDto) => {
+              return (
+                <LocationDetails
+                  key={locationDto.id}
+                  locationDto={locationDto}
+                  onUpdate={handleLocationUpdate}
+                  onDelete={handleLocationDelete}
+                />
+              );
+            })}
+          {isCreatingLocation &&
+            (<LocationDetails
+              key='new_location'
+              locationDto={{ id: -1, name: 'New Location', city: '-', country: '-', locationCode: '-' }}
+              onUpdate={handleLocationCreate}
+              onDelete={async () => { setIsCreatingLocation(false); }}
+            />
+            )}
+        </>
       </Accordion>
     </Stack>
   );

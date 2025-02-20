@@ -83,7 +83,7 @@ export function LocationDetails({
   };
 
   return (
-    <Accordion.Item key={location.id} value={location.name}>
+    <Accordion.Item key={headerLocation.id} value={headerLocation.id.toString()}>
       <Accordion.Control icon={<IconMapPin2 />}>
         <Grid mr="30%">
           <Grid.Col span={6}>{headerLocation.name}</Grid.Col>
