@@ -4,8 +4,8 @@ import { Accordion, ActionIcon, Flex, Grid, Group } from '@mantine/core';
 import { LocationsMap } from '@/types/location';
 import { TransportationDto, WeekDay } from '@/types/transportation';
 import { createOptionsFromLocationsMap, SearchableSelect, transportTypeOptions } from './SearchableSelect';
-import { WeekDayDisplay } from './WeekDayDisplay';
 import { TransportationTypeIcon } from './TransportationTypeIcon';
+import { WeekDayDisplay } from './WeekDayDisplay';
 import { WeekDaySelect } from './WeekDaySelect';
 
 export default function TransportationDetails({
@@ -41,10 +41,10 @@ export default function TransportationDetails({
   const handleOperatingDaysChange = (value: WeekDay[]) => {
     setTransportation((prev) => ({
       ...prev,
-      'operatingDays': value
+      operatingDays: value,
     }));
     setHasUnsavedChanges(true);
-  }
+  };
 
   const handleSubmit = async () => {
     setIsUpdating(true);
@@ -80,11 +80,15 @@ export default function TransportationDetails({
   return (
     <Accordion.Item key={headerTransportation.id} value={headerTransportation.id?.toString()}>
       <Accordion.Control icon={<IconLine />}>
-        <Grid mr="30%" align='center'>
+        <Grid mr="30%" align="center">
           <Grid.Col span={4}>{locationsMap[headerTransportation.originLocationId]?.name ?? ''}</Grid.Col>
-          <Grid.Col span={1}><TransportationTypeIcon type={headerTransportation.type} /></Grid.Col>
+          <Grid.Col span={1}>
+            <TransportationTypeIcon type={headerTransportation.type} />
+          </Grid.Col>
           <Grid.Col span={4}>{locationsMap[headerTransportation.destinationLocationId]?.name ?? ''}</Grid.Col>
-          <Grid.Col span={3}><WeekDayDisplay key={headerTransportation.id} activeDays={headerTransportation.operatingDays} /></Grid.Col>
+          <Grid.Col span={3}>
+            <WeekDayDisplay key={headerTransportation.id} activeDays={headerTransportation.operatingDays} />
+          </Grid.Col>
         </Grid>
       </Accordion.Control>
       <Accordion.Panel>
@@ -116,7 +120,12 @@ export default function TransportationDetails({
             }}
             onChange={handleChange('destinationLocationId')}
           />
-          <WeekDaySelect value={transportation.operatingDays} onChange={(newValue) => { handleOperatingDaysChange(newValue as WeekDay[]) }}/>
+          <WeekDaySelect
+            value={transportation.operatingDays}
+            onChange={(newValue) => {
+              handleOperatingDaysChange(newValue as WeekDay[]);
+            }}
+          />
 
           <Group gap="xs">
             <ActionIcon size="input-md" mt="auto" color="lime" loading={isUpdating} disabled={!hasUnsavedChanges} onClick={handleSubmit}>

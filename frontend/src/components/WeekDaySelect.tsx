@@ -47,7 +47,7 @@ export function WeekDaySelect({
   return (
     <Combobox store={combobox} onOptionSubmit={handleValueSelect}>
       <Combobox.DropdownTarget>
-        <PillsInput mt='auto' maw='30%' label='Operating Days' onClick={() => combobox.openDropdown()}>
+        <PillsInput mt="auto" maw="30%" label="Operating Days" onClick={() => combobox.openDropdown()}>
           <Pill.Group>
             {values}
             <Combobox.EventsTarget>

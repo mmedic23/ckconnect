@@ -5,7 +5,6 @@ import { apiUrl } from '@/Properties';
 import { LocationDto, LocationsMap } from '@/types/location';
 import { RichTransportationDto, TransportationDto } from '@/types/transportation';
 import TransportationDetails from './TransportationDetails';
-import { WeekDayDisplay } from './WeekDayDisplay';
 
 export function TransportationsTable() {
   const [transportations, setTransportations] = useState<TransportationDto[]>([]);
@@ -27,7 +26,7 @@ export function TransportationsTable() {
           originLocationId: t.origin.id,
           destinationLocationId: t.destination.id,
           type: t.type,
-          operatingDays: t.operatingDays
+          operatingDays: t.operatingDays,
         };
         return transportationDto;
       });
@@ -161,7 +160,7 @@ export function TransportationsTable() {
                 destinationLocationId: -1,
                 originLocationId: -1,
                 type: 'FLIGHT',
-                operatingDays: []
+                operatingDays: [],
               }}
               locationsMap={locations}
               onUpdate={handleTransportationCreate}

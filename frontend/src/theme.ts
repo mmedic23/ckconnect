@@ -20,9 +20,9 @@ export const theme = createTheme({
     NavLink: {
       styles: (theme: MantineThemeOverride) => ({
         label: {
-          fontSize: 16
-        }
-      })
-    }
+          fontSize: 16,
+        },
+      }),
+    },
   },
 });

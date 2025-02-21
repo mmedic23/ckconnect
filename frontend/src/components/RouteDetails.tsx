@@ -1,6 +1,6 @@
 import React from 'react';
-import { IconFlagPin, IconMapPin, IconMapPin2, IconMapPinFilled, IconPinFilled, IconRoute2 } from '@tabler/icons-react';
-import { Flex, Group, Space, Text, Timeline } from '@mantine/core';
+import { IconFlagPin, IconMapPinFilled } from '@tabler/icons-react';
+import { Space, Text, Timeline } from '@mantine/core';
 import { RouteDto } from '@/types/route';
 import { TransportationTypeIcon } from './TransportationTypeIcon';
 
@@ -18,46 +18,46 @@ export function RouteDetails({ route }: { route: RouteDto }) {
         return (
           <>
             {index === 0 && (
-              <React.Fragment key={'cont-' + index}>
-                <Timeline.Item key={'loc-' + r.id} bullet={<IconMapPinFilled />} lineVariant="dashed">
+              <React.Fragment key={`cont-${index}`}>
+                <Timeline.Item key={`loc-${r.id}`} bullet={<IconMapPinFilled />} lineVariant="dashed">
                   <Text>
                     {r.origin.name} ({r.origin.locationCode})
                   </Text>
-                  <Space h="md"></Space>
+                  <Space h="md" />
                 </Timeline.Item>
-                <Timeline.Item key={'icon-' + r.id} bullet={<TransportationTypeIcon type={r.type} />} lineVariant="dashed">
+                <Timeline.Item key={`icon-${r.id}`} bullet={<TransportationTypeIcon type={r.type} />} lineVariant="dashed">
                   <Text c="dimmed">{typeDetails[r.type]}</Text>
-                  <Space h="md"></Space>
+                  <Space h="md" />
                 </Timeline.Item>
               </React.Fragment>
             )}
             {index !== 0 && index !== route.legs.length - 1 && (
-              <React.Fragment key={'cont-' + index}>
-                <Timeline.Item key={'loc-' + r.id} bullet={<IconMapPinFilled />} lineVariant="dashed">
+              <React.Fragment key={`cont-${index}`}>
+                <Timeline.Item key={`loc-${r.id}`} bullet={<IconMapPinFilled />} lineVariant="dashed">
                   <Text>
                     {r.origin.name} ({r.origin.locationCode})
                   </Text>
-                  <Space h="md"></Space>
+                  <Space h="md" />
                 </Timeline.Item>
-                <Timeline.Item key={'icon-' + r.id} bullet={<TransportationTypeIcon type={r.type} />} lineVariant="dashed">
+                <Timeline.Item key={`icon-${r.id}`} bullet={<TransportationTypeIcon type={r.type} />} lineVariant="dashed">
                   <Text c="dimmed">{typeDetails[r.type]}</Text>
-                  <Space h="md"></Space>
+                  <Space h="md" />
                 </Timeline.Item>
               </React.Fragment>
             )}
             {index === route.legs.length - 1 && (
-              <React.Fragment key={'cont-' + index}>
-                <Timeline.Item key={'loc-' + r.id} bullet={<IconMapPinFilled />} lineVariant="dashed">
+              <React.Fragment key={`cont-${index}`}>
+                <Timeline.Item key={`loc-${r.id}`} bullet={<IconMapPinFilled />} lineVariant="dashed">
                   <Text>
                     {r.origin.name} ({r.origin.locationCode})
                   </Text>
-                  <Space h="md"></Space>
+                  <Space h="md" />
                 </Timeline.Item>
-                <Timeline.Item key={'icon-' + r.id} bullet={<TransportationTypeIcon type={r.type} />} lineVariant="dashed">
+                <Timeline.Item key={`icon-${r.id}`} bullet={<TransportationTypeIcon type={r.type} />} lineVariant="dashed">
                   <Text c="dimmed">{typeDetails[r.type]}</Text>
-                  <Space h="md"></Space>
+                  <Space h="md" />
                 </Timeline.Item>
-                <Timeline.Item key={'finalloc-' + r.id} bullet={<IconFlagPin />} lineVariant="dashed">
+                <Timeline.Item key={`finalloc-${r.id}`} bullet={<IconFlagPin />} lineVariant="dashed">
                   <Text>
                     {r.destination.name} ({r.destination.locationCode})
                   </Text>
