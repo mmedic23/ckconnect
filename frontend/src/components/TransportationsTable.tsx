@@ -5,6 +5,7 @@ import { apiUrl } from '@/Properties';
 import { LocationDto, LocationsMap } from '@/types/location';
 import { RichTransportationDto, TransportationDto } from '@/types/transportation';
 import TransportationDetails from './TransportationDetails';
+import { WeekDayDisplay } from './WeekDayDisplay';
 
 export function TransportationsTable() {
   const [transportations, setTransportations] = useState<TransportationDto[]>([]);
@@ -26,6 +27,7 @@ export function TransportationsTable() {
           originLocationId: t.origin.id,
           destinationLocationId: t.destination.id,
           type: t.type,
+          operatingDays: t.operatingDays
         };
         return transportationDto;
       });
@@ -111,14 +113,17 @@ export function TransportationsTable() {
   return (
     <Stack my="lg" gap="xs" pos="relative">
       <Grid ml={60} mr="30%">
-        <Grid.Col p={0} span={5}>
+        <Grid.Col p={0} span={4}>
           <Text fw={700}>Origin</Text>
         </Grid.Col>
         <Grid.Col p={0} span={2}>
           <Text fw={700}>Type</Text>
         </Grid.Col>
-        <Grid.Col p={0} span={5}>
+        <Grid.Col p={0} span={4}>
           <Text fw={700}>Destination</Text>
+        </Grid.Col>
+        <Grid.Col p={0} span={2}>
+          <Text fw={700}>Operating Days</Text>
         </Grid.Col>
       </Grid>
       <ActionIcon
@@ -156,6 +161,7 @@ export function TransportationsTable() {
                 destinationLocationId: -1,
                 originLocationId: -1,
                 type: 'FLIGHT',
+                operatingDays: []
               }}
               locationsMap={locations}
               onUpdate={handleTransportationCreate}

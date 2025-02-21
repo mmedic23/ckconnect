@@ -4,6 +4,7 @@ import { Accordion, ActionIcon, Flex, Grid, Group } from '@mantine/core';
 import { LocationsMap } from '@/types/location';
 import { TransportationDto } from '@/types/transportation';
 import { createOptionsFromLocationsMap, SearchableSelect, transportTypeOptions } from './SearchableSelect';
+import { WeekDayDisplay } from './WeekDayDisplay';
 
 export default function TransportationDetails({
   transportationDto,
@@ -70,9 +71,10 @@ export default function TransportationDetails({
     <Accordion.Item key={headerTransportation.id} value={headerTransportation.id?.toString()}>
       <Accordion.Control icon={<IconLine />}>
         <Grid mr="30%">
-          <Grid.Col span={5}>{locationsMap[headerTransportation.originLocationId]?.name ?? ''}</Grid.Col>
+          <Grid.Col span={4}>{locationsMap[headerTransportation.originLocationId]?.name ?? ''}</Grid.Col>
           <Grid.Col span={2}>{headerTransportation.type}</Grid.Col>
-          <Grid.Col span={5}>{locationsMap[headerTransportation.destinationLocationId]?.name ?? ''}</Grid.Col>
+          <Grid.Col span={4}>{locationsMap[headerTransportation.destinationLocationId]?.name ?? ''}</Grid.Col>
+          <Grid.Col span={2}><WeekDayDisplay activeDays={headerTransportation.operatingDays} /></Grid.Col>
         </Grid>
       </Accordion.Control>
       <Accordion.Panel>
