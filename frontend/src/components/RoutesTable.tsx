@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { IconArrowNarrowRightDashed, IconArrowRightDashed, IconBrandUber, IconBus, IconPlane, IconTrain } from '@tabler/icons-react';
-import { Button, Flex, NavLink, Skeleton, Stack, Text, Title } from '@mantine/core';
+import { Button, Flex, HoverCard, NavLink, Skeleton, Stack, Text, Title } from '@mantine/core';
 import { apiUrl } from '@/Properties';
 import { LocationDto, LocationsMap } from '@/types/location';
 import { FindRouteResponse } from '@/types/route';
@@ -115,10 +115,46 @@ export function RoutesTable() {
                   })()}
                   rightSection={(() => {
                     const typeIcons = {
-                      FLIGHT: <IconPlane stroke={1.5} />,
-                      BUS: <IconBus stroke={1.5} />,
-                      SUBWAY: <IconTrain stroke={1.5} />,
-                      UBER: <IconBrandUber stroke={1.5} />,
+                      FLIGHT: (
+                        <HoverCard openDelay={250}>
+                          <HoverCard.Target>
+                            <IconPlane stroke={1.5} />
+                          </HoverCard.Target>
+                          <HoverCard.Dropdown p='xs'>
+                            <Text size="sm">Flight</Text>
+                          </HoverCard.Dropdown>
+                        </HoverCard>
+                      ),
+                      BUS: (
+                        <HoverCard openDelay={250}>
+                          <HoverCard.Target>
+                            <IconBus stroke={1.5} />
+                          </HoverCard.Target>
+                          <HoverCard.Dropdown p='xs'>
+                            <Text size="sm">Bus</Text>
+                          </HoverCard.Dropdown>
+                        </HoverCard>
+                      ),
+                      SUBWAY: (
+                        <HoverCard openDelay={250}>
+                          <HoverCard.Target>
+                            <IconTrain stroke={1.5} />
+                          </HoverCard.Target>
+                          <HoverCard.Dropdown p='xs'>
+                            <Text size="sm">Subway</Text>
+                          </HoverCard.Dropdown>
+                        </HoverCard>
+                      ),
+                      UBER: (
+                        <HoverCard openDelay={250}>
+                          <HoverCard.Target>
+                            <IconBrandUber stroke={1.5} />
+                          </HoverCard.Target>
+                          <HoverCard.Dropdown p='xs'>
+                            <Text size="sm">Uber</Text>
+                          </HoverCard.Dropdown>
+                        </HoverCard>
+                      ),
                     };
                     const transportTypeIcons = routeDto.legs.flatMap((t, index) =>
                       index === 0 ? [typeIcons[t.type]] : [<Text>{t.origin.locationCode}</Text>, typeIcons[t.type]]
