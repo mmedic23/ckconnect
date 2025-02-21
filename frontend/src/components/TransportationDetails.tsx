@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { IconCancel, IconCheck, IconDeviceFloppy, IconLine, IconRestore, IconTrash } from '@tabler/icons-react';
 import { Accordion, ActionIcon, Flex, Grid, Group } from '@mantine/core';
 import { LocationsMap } from '@/types/location';
-import { TransportationDto } from '@/types/transportation';
+import { TransportationDto, WeekDay } from '@/types/transportation';
 import { createOptionsFromLocationsMap, SearchableSelect, transportTypeOptions } from './SearchableSelect';
 import { WeekDayDisplay } from './WeekDayDisplay';
 import { TransportationTypeIcon } from './TransportationTypeIcon';
+import { WeekDaySelect } from './WeekDaySelect';
 
 export default function TransportationDetails({
   transportationDto,
@@ -36,6 +37,14 @@ export default function TransportationDetails({
     }));
     setHasUnsavedChanges(true);
   };
+
+  const handleOperatingDaysChange = (value: WeekDay[]) => {
+    setTransportation((prev) => ({
+      ...prev,
+      'operatingDays': value
+    }));
+    setHasUnsavedChanges(true);
+  }
 
   const handleSubmit = async () => {
     setIsUpdating(true);
@@ -75,7 +84,7 @@ export default function TransportationDetails({
           <Grid.Col span={4}>{locationsMap[headerTransportation.originLocationId]?.name ?? ''}</Grid.Col>
           <Grid.Col span={1}><TransportationTypeIcon type={headerTransportation.type} /></Grid.Col>
           <Grid.Col span={4}>{locationsMap[headerTransportation.destinationLocationId]?.name ?? ''}</Grid.Col>
-          <Grid.Col span={3}><WeekDayDisplay activeDays={headerTransportation.operatingDays} /></Grid.Col>
+          <Grid.Col span={3}><WeekDayDisplay key={headerTransportation.id} activeDays={headerTransportation.operatingDays} /></Grid.Col>
         </Grid>
       </Accordion.Control>
       <Accordion.Panel>
@@ -107,6 +116,7 @@ export default function TransportationDetails({
             }}
             onChange={handleChange('destinationLocationId')}
           />
+          <WeekDaySelect value={transportation.operatingDays} onChange={(newValue) => { handleOperatingDaysChange(newValue as WeekDay[]) }}/>
 
           <Group gap="xs">
             <ActionIcon size="input-md" mt="auto" color="lime" loading={isUpdating} disabled={!hasUnsavedChanges} onClick={handleSubmit}>
