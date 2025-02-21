@@ -7,49 +7,7 @@ import { LocationDto, LocationsMap } from '@/types/location';
 import { FindRouteResponse, RouteDto } from '@/types/route';
 import { createOptionsFromLocationsMap, SearchableSelect, SearchableSelectItem } from './SearchableSelect';
 import { RouteDetails } from './RouteDetails';
-
-export const typeIcons = {
-  FLIGHT: (
-    <HoverCard openDelay={250}>
-      <HoverCard.Target>
-        <IconPlane stroke={1.5} />
-      </HoverCard.Target>
-      <HoverCard.Dropdown p="xs">
-        <Text size="sm">Flight</Text>
-      </HoverCard.Dropdown>
-    </HoverCard>
-  ),
-  BUS: (
-    <HoverCard openDelay={250}>
-      <HoverCard.Target>
-        <IconBus stroke={1.5} />
-      </HoverCard.Target>
-      <HoverCard.Dropdown p="xs">
-        <Text size="sm">Bus</Text>
-      </HoverCard.Dropdown>
-    </HoverCard>
-  ),
-  SUBWAY: (
-    <HoverCard openDelay={250}>
-      <HoverCard.Target>
-        <IconTrain stroke={1.5} />
-      </HoverCard.Target>
-      <HoverCard.Dropdown p="xs">
-        <Text size="sm">Subway</Text>
-      </HoverCard.Dropdown>
-    </HoverCard>
-  ),
-  UBER: (
-    <HoverCard openDelay={250}>
-      <HoverCard.Target>
-        <IconBrandUber stroke={1.5} />
-      </HoverCard.Target>
-      <HoverCard.Dropdown p="xs">
-        <Text size="sm">Uber</Text>
-      </HoverCard.Dropdown>
-    </HoverCard>
-  ),
-};
+import { TransportationTypeIcon } from './TransportationTypeIcon';
 
 export function RoutesTable() {
   const [locations, setLocations] = useState<LocationsMap>([]);
@@ -161,10 +119,10 @@ export function RoutesTable() {
                   })()}
                   rightSection={(() => {
                     const transportTypeIcons = routeDto.legs.flatMap((t, index) =>
-                      index === 0 ? [typeIcons[t.type]] : [<Text>{t.origin.locationCode}</Text>, typeIcons[t.type]]
+                      index === 0 ? [<TransportationTypeIcon key={'icon-'+t.id} type={t.type} />] : [<Text key={'text-'+t.id}>{t.origin.locationCode}</Text>, <TransportationTypeIcon key={'icon-'+t.id} type={t.type} />]
                     );
                     const transportIconsWithSeparators = transportTypeIcons.flatMap((icon, index) =>
-                      index === transportTypeIcons.length - 1 ? [icon] : [icon, <IconArrowNarrowRightDashed stroke={1.5} />]
+                      index === transportTypeIcons.length - 1 ? [icon] : [icon, <IconArrowNarrowRightDashed key={'arrow-'+icon.key} stroke={1.5} />]
                     );
                     return transportIconsWithSeparators;
                   })()}

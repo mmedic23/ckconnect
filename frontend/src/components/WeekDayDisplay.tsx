@@ -1,4 +1,3 @@
-import React from 'react';
 import { Badge, Divider, Group, Paper, Text } from '@mantine/core';
 import { WeekDay } from '@/types/transportation';
 
@@ -10,14 +9,14 @@ export function WeekDayDisplay({ activeDays }: { activeDays: WeekDay[] }) {
       {weekDays.map((day, index) => {
         const isActive = activeDays.includes(day);
         return (
-          <React.Fragment key={day}>
+          <>
             <Badge circle color={isActive ? '' : 'gray.7'} variant={isActive ? 'filled' : 'outline'}>
               <Text size="xs">{day[0]}</Text>
             </Badge>
             {index < weekDays.length - 1 && (
               <Divider w={10} size='md' orientation='horizontal' />
             )}
-          </React.Fragment>
+          </>
         );
       })}
     </Group>

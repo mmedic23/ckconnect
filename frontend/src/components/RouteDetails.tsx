@@ -1,14 +1,15 @@
+import React from 'react';
 import { IconFlagPin, IconMapPin, IconMapPin2, IconMapPinFilled, IconPinFilled, IconRoute2 } from '@tabler/icons-react';
 import { Flex, Group, Space, Text, Timeline } from '@mantine/core';
 import { RouteDto } from '@/types/route';
-import { typeIcons } from './RoutesTable';
+import { TransportationTypeIcon } from './TransportationTypeIcon';
 
 const typeDetails = {
-    'FLIGHT': 'Take the flight',
-    'BUS': 'Take a bus',
-    'SUBWAY': 'Take the subway',
-    'UBER': 'Take an Uber'
-}
+  FLIGHT: 'Take the flight',
+  BUS: 'Take a bus',
+  SUBWAY: 'Take the subway',
+  UBER: 'Take an Uber',
+};
 
 export function RouteDetails({ route }: { route: RouteDto }) {
   return (
@@ -17,43 +18,51 @@ export function RouteDetails({ route }: { route: RouteDto }) {
         return (
           <>
             {index === 0 && (
-              <>
-                <Timeline.Item bullet={<IconMapPinFilled />} lineVariant="dashed">
-                  <Text>{r.origin.name} ({r.origin.locationCode})</Text>
+              <React.Fragment key={'cont-' + index}>
+                <Timeline.Item key={'loc-' + r.id} bullet={<IconMapPinFilled />} lineVariant="dashed">
+                  <Text>
+                    {r.origin.name} ({r.origin.locationCode})
+                  </Text>
                   <Space h="md"></Space>
                 </Timeline.Item>
-                <Timeline.Item bullet={typeIcons[r.type]} lineVariant="dashed">
+                <Timeline.Item key={'icon-' + r.id} bullet={<TransportationTypeIcon type={r.type} />} lineVariant="dashed">
                   <Text c="dimmed">{typeDetails[r.type]}</Text>
                   <Space h="md"></Space>
                 </Timeline.Item>
-              </>
+              </React.Fragment>
             )}
             {index !== 0 && index !== route.legs.length - 1 && (
-              <>
-                <Timeline.Item bullet={<IconMapPinFilled />} lineVariant="dashed">
-                  <Text>{r.origin.name} ({r.origin.locationCode})</Text>
+              <React.Fragment key={'cont-' + index}>
+                <Timeline.Item key={'loc-' + r.id} bullet={<IconMapPinFilled />} lineVariant="dashed">
+                  <Text>
+                    {r.origin.name} ({r.origin.locationCode})
+                  </Text>
                   <Space h="md"></Space>
                 </Timeline.Item>
-                <Timeline.Item bullet={typeIcons[r.type]} lineVariant="dashed">
+                <Timeline.Item key={'icon-' + r.id} bullet={<TransportationTypeIcon type={r.type} />} lineVariant="dashed">
                   <Text c="dimmed">{typeDetails[r.type]}</Text>
                   <Space h="md"></Space>
                 </Timeline.Item>
-              </>
+              </React.Fragment>
             )}
             {index === route.legs.length - 1 && (
-              <>
-                <Timeline.Item bullet={<IconMapPinFilled />} lineVariant="dashed">
-                  <Text>{r.origin.name} ({r.origin.locationCode})</Text>
+              <React.Fragment key={'cont-' + index}>
+                <Timeline.Item key={'loc-' + r.id} bullet={<IconMapPinFilled />} lineVariant="dashed">
+                  <Text>
+                    {r.origin.name} ({r.origin.locationCode})
+                  </Text>
                   <Space h="md"></Space>
                 </Timeline.Item>
-                <Timeline.Item bullet={typeIcons[r.type]} lineVariant="dashed">
+                <Timeline.Item key={'icon-' + r.id} bullet={<TransportationTypeIcon type={r.type} />} lineVariant="dashed">
                   <Text c="dimmed">{typeDetails[r.type]}</Text>
                   <Space h="md"></Space>
                 </Timeline.Item>
-                <Timeline.Item bullet={<IconFlagPin />} lineVariant="dashed">
-                  <Text>{r.destination.name} ({r.destination.locationCode})</Text>
+                <Timeline.Item key={'finalloc-' + r.id} bullet={<IconFlagPin />} lineVariant="dashed">
+                  <Text>
+                    {r.destination.name} ({r.destination.locationCode})
+                  </Text>
                 </Timeline.Item>
-              </>
+              </React.Fragment>
             )}
           </>
         );
