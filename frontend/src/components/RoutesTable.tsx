@@ -1,10 +1,55 @@
 import { useEffect, useState } from 'react';
 import { IconArrowNarrowRightDashed, IconArrowRightDashed, IconBrandUber, IconBus, IconPlane, IconTrain } from '@tabler/icons-react';
-import { Button, Flex, HoverCard, NavLink, Skeleton, Stack, Text, Title } from '@mantine/core';
+import { Button, Drawer, Flex, HoverCard, NavLink, Skeleton, Stack, Text, Title } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { apiUrl } from '@/Properties';
 import { LocationDto, LocationsMap } from '@/types/location';
-import { FindRouteResponse } from '@/types/route';
+import { FindRouteResponse, RouteDto } from '@/types/route';
 import { createOptionsFromLocationsMap, SearchableSelect, SearchableSelectItem } from './SearchableSelect';
+import { RouteDetails } from './RouteDetails';
+
+export const typeIcons = {
+  FLIGHT: (
+    <HoverCard openDelay={250}>
+      <HoverCard.Target>
+        <IconPlane stroke={1.5} />
+      </HoverCard.Target>
+      <HoverCard.Dropdown p="xs">
+        <Text size="sm">Flight</Text>
+      </HoverCard.Dropdown>
+    </HoverCard>
+  ),
+  BUS: (
+    <HoverCard openDelay={250}>
+      <HoverCard.Target>
+        <IconBus stroke={1.5} />
+      </HoverCard.Target>
+      <HoverCard.Dropdown p="xs">
+        <Text size="sm">Bus</Text>
+      </HoverCard.Dropdown>
+    </HoverCard>
+  ),
+  SUBWAY: (
+    <HoverCard openDelay={250}>
+      <HoverCard.Target>
+        <IconTrain stroke={1.5} />
+      </HoverCard.Target>
+      <HoverCard.Dropdown p="xs">
+        <Text size="sm">Subway</Text>
+      </HoverCard.Dropdown>
+    </HoverCard>
+  ),
+  UBER: (
+    <HoverCard openDelay={250}>
+      <HoverCard.Target>
+        <IconBrandUber stroke={1.5} />
+      </HoverCard.Target>
+      <HoverCard.Dropdown p="xs">
+        <Text size="sm">Uber</Text>
+      </HoverCard.Dropdown>
+    </HoverCard>
+  ),
+};
 
 export function RoutesTable() {
   const [locations, setLocations] = useState<LocationsMap>([]);
@@ -13,7 +58,8 @@ export function RoutesTable() {
   const [isLoading, setIsLoading] = useState(false);
   const [foundRoutes, setFoundRoutes] = useState<FindRouteResponse | undefined>();
 
-  const [selectedRoute, setSelectedRoute] = useState(-1);
+  const [selectedRoute, setSelectedRoute] = useState<RouteDto | undefined>();
+  const [isRouteDrawerOpen, { open, close }] = useDisclosure(false);
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -43,7 +89,7 @@ export function RoutesTable() {
     if (originLocation === undefined || destinationLocation === undefined) {
       return;
     }
-    setSelectedRoute(-1);
+    setSelectedRoute(undefined);
     setFoundRoutes(undefined);
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 1000)); // TODO for debug, remove me!
@@ -58,7 +104,7 @@ export function RoutesTable() {
 
   const locationOptions: SearchableSelectItem[] = createOptionsFromLocationsMap(locations);
   return (
-    <Stack gap="xs" w={650}>
+    <Stack gap="xs" w={{ sm: '48em' }}>
       <Flex gap="md" p="md" ml="md" wrap="wrap">
         <SearchableSelect
           key="search-origin"
@@ -107,55 +153,13 @@ export function RoutesTable() {
               return (
                 <NavLink
                   key={routeDto.order}
-                  active={selectedRoute === routeDto.order}
-                  onClick={() => setSelectedRoute(routeDto.order)}
+                  active={selectedRoute?.order === routeDto.order}
+                  onClick={() => {setSelectedRoute(routeDto); open();}}
                   label={(() => {
                     const flightLeg = routeDto.legs.find((t) => t.type === 'FLIGHT');
                     return flightLeg ? `Via ${flightLeg.origin.name} (${flightLeg.origin.locationCode})` : '';
                   })()}
                   rightSection={(() => {
-                    const typeIcons = {
-                      FLIGHT: (
-                        <HoverCard openDelay={250}>
-                          <HoverCard.Target>
-                            <IconPlane stroke={1.5} />
-                          </HoverCard.Target>
-                          <HoverCard.Dropdown p='xs'>
-                            <Text size="sm">Flight</Text>
-                          </HoverCard.Dropdown>
-                        </HoverCard>
-                      ),
-                      BUS: (
-                        <HoverCard openDelay={250}>
-                          <HoverCard.Target>
-                            <IconBus stroke={1.5} />
-                          </HoverCard.Target>
-                          <HoverCard.Dropdown p='xs'>
-                            <Text size="sm">Bus</Text>
-                          </HoverCard.Dropdown>
-                        </HoverCard>
-                      ),
-                      SUBWAY: (
-                        <HoverCard openDelay={250}>
-                          <HoverCard.Target>
-                            <IconTrain stroke={1.5} />
-                          </HoverCard.Target>
-                          <HoverCard.Dropdown p='xs'>
-                            <Text size="sm">Subway</Text>
-                          </HoverCard.Dropdown>
-                        </HoverCard>
-                      ),
-                      UBER: (
-                        <HoverCard openDelay={250}>
-                          <HoverCard.Target>
-                            <IconBrandUber stroke={1.5} />
-                          </HoverCard.Target>
-                          <HoverCard.Dropdown p='xs'>
-                            <Text size="sm">Uber</Text>
-                          </HoverCard.Dropdown>
-                        </HoverCard>
-                      ),
-                    };
                     const transportTypeIcons = routeDto.legs.flatMap((t, index) =>
                       index === 0 ? [typeIcons[t.type]] : [<Text>{t.origin.locationCode}</Text>, typeIcons[t.type]]
                     );
@@ -167,6 +171,9 @@ export function RoutesTable() {
                 />
               );
             })}
+            <Drawer position='right' opened={isRouteDrawerOpen} onClose={close}>
+              { selectedRoute !== undefined ? <RouteDetails route={selectedRoute} /> : <Skeleton /> }
+            </Drawer>
           </Stack>
         </>
       ) : (
