@@ -47,11 +47,11 @@ public class RouteServiceImpl implements RouteService {
 
         // dfs(origin, destination, routeGraph, new ArrayList<>(), routes);
 
-        searchRoutes(origin, destination, routeGraph, routes);
+        searchRoutes(origin, destination, routeGraph, routes, dayOfWeek);
         return routes;
     }
 
-    private void searchRoutes(LocationDTO origin, LocationDTO destination, RouteGraph routeGraph, List<RouteDTO> routes) {
+    private void searchRoutes(LocationDTO origin, LocationDTO destination, RouteGraph routeGraph, List<RouteDTO> routes, DayOfWeek dayOfWeek) {
         Stack<RouteState> stack = new Stack<>();
 
         List<TransportationDTO> outgoing = routeGraph.getOutgoingTransports(origin);
@@ -72,7 +72,7 @@ public class RouteServiceImpl implements RouteService {
 
             LocationDTO newLocation = nextOutgoing.destination();
             if (newLocation.equals(destination)) {
-                if (isValidPath(newPath)) {
+                if (isValidPath(newPath, dayOfWeek)) {
                     routes.add(new RouteDTO(routes.size() + 1, newPath.size(), newPath));
                 }
                 continue;
@@ -93,7 +93,7 @@ public class RouteServiceImpl implements RouteService {
      * @deprecated Please use the iterative version {@link RouteServiceImpl#searchRoutes} instead.
      */
     @Deprecated
-    private void dfs(LocationDTO current, LocationDTO destination, RouteGraph routeGraph, List<TransportationDTO> currentPath, List<RouteDTO> routesToDestination) {
+    private void dfs(LocationDTO current, LocationDTO destination, RouteGraph routeGraph, List<TransportationDTO> currentPath, List<RouteDTO> routesToDestination, DayOfWeek dayOfWeek) {
         logger.trace("DFS called with Current: {} Destination: {}", current, destination);
         logger.trace("Current path: {}", currentPath.stream().map(TransportationDTO::toString).collect(Collectors.joining(", ")));
         if (currentPath.size() > 3) {
@@ -105,7 +105,7 @@ public class RouteServiceImpl implements RouteService {
         }
 
         if (current.equals(destination)) {
-            if (isValidPath(currentPath)) {
+            if (isValidPath(currentPath, dayOfWeek)) {
                 routesToDestination.add(new RouteDTO(routesToDestination.size() + 1, currentPath.size(), new ArrayList<>(currentPath)));
                 return;
             }
@@ -119,12 +119,12 @@ public class RouteServiceImpl implements RouteService {
             // TODO Maybe don't add the outgoing path if it would validate the rules? If implemented, would this remove the need for the isValidPath check?
             logger.trace("Evaluating transportation: {}", outgoingTransportation);
             currentPath.add(outgoingTransportation);
-            dfs(outgoingTransportation.destination(), destination, routeGraph, currentPath, routesToDestination);
+            dfs(outgoingTransportation.destination(), destination, routeGraph, currentPath, routesToDestination, dayOfWeek);
             currentPath.removeLast();
         }
     }
 
-    private boolean isValidPath(List<TransportationDTO> path) {
+    private boolean isValidPath(List<TransportationDTO> path, DayOfWeek dayOfWeek) {
         // Path cannot be empty or longer than 3
         if (path.isEmpty() || path.size() > 3) {
             return false;
@@ -138,9 +138,12 @@ public class RouteServiceImpl implements RouteService {
             return false;
         }
 
-        // Path must be connected
-        for (int i = 0; i < path.size() - 1; i++) {
-            if (!path.get(i).destination().equals(path.get(i + 1).origin())) {
+        // Path must be connected AND each leg should be operating on dayOfWeek
+        for (int i = 0; i < path.size(); i++) {
+            if (i < path.size() - 1 && !path.get(i).destination().equals(path.get(i + 1).origin())) {
+                return false;
+            }
+            if (!path.get(i).operatingDays().contains(dayOfWeek)) {
                 return false;
             }
         }
