@@ -3,6 +3,8 @@ package com.cankaratepe.ckconnect.transportation;
 import com.cankaratepe.ckconnect.location.LocationEntity;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "transportation")
 public class TransportationEntity {
@@ -16,6 +18,8 @@ public class TransportationEntity {
     @JoinColumn(nullable = false)
     private LocationEntity destinationLocation;
     private TransportationType transportationType;
+    @ElementCollection
+    private List<WeekDay> operatingDays;
 
     public Long getId() {
         return id;
@@ -47,5 +51,13 @@ public class TransportationEntity {
 
     public void setTransportationType(TransportationType transportationType) {
         this.transportationType = transportationType;
+    }
+
+    public List<WeekDay> getOperatingDays() {
+        return operatingDays;
+    }
+
+    public void setOperatingDays(List<WeekDay> operatingDays) {
+        this.operatingDays = operatingDays;
     }
 }

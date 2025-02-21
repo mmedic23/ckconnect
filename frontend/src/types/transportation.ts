@@ -5,6 +5,7 @@ export interface RichTransportationDto {
   origin: LocationDto;
   destination: LocationDto;
   type: 'FLIGHT' | 'BUS' | 'SUBWAY' | 'UBER';
+  operatingDays: WeekDay[];
 }
 
 export interface TransportationDto {
@@ -12,4 +13,8 @@ export interface TransportationDto {
   originLocationId: number;
   destinationLocationId: number;
   type: 'FLIGHT' | 'BUS' | 'SUBWAY' | 'UBER';
+  operatingDays: WeekDay[];
 }
+
+export type TransportationType = 'FLIGHT' | 'BUS' | 'SUBWAY' | 'UBER';
+export type WeekDay = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
