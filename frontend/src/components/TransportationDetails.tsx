@@ -5,6 +5,7 @@ import { LocationsMap } from '@/types/location';
 import { TransportationDto } from '@/types/transportation';
 import { createOptionsFromLocationsMap, SearchableSelect, transportTypeOptions } from './SearchableSelect';
 import { WeekDayDisplay } from './WeekDayDisplay';
+import { TransportationTypeIcon } from './TransportationTypeIcon';
 
 export default function TransportationDetails({
   transportationDto,
@@ -70,11 +71,11 @@ export default function TransportationDetails({
   return (
     <Accordion.Item key={headerTransportation.id} value={headerTransportation.id?.toString()}>
       <Accordion.Control icon={<IconLine />}>
-        <Grid mr="30%">
+        <Grid mr="30%" align='center'>
           <Grid.Col span={4}>{locationsMap[headerTransportation.originLocationId]?.name ?? ''}</Grid.Col>
-          <Grid.Col span={2}>{headerTransportation.type}</Grid.Col>
+          <Grid.Col span={1}><TransportationTypeIcon type={headerTransportation.type} /></Grid.Col>
           <Grid.Col span={4}>{locationsMap[headerTransportation.destinationLocationId]?.name ?? ''}</Grid.Col>
-          <Grid.Col span={2}><WeekDayDisplay activeDays={headerTransportation.operatingDays} /></Grid.Col>
+          <Grid.Col span={3}><WeekDayDisplay activeDays={headerTransportation.operatingDays} /></Grid.Col>
         </Grid>
       </Accordion.Control>
       <Accordion.Panel>

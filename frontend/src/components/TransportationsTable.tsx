@@ -116,13 +116,13 @@ export function TransportationsTable() {
         <Grid.Col p={0} span={4}>
           <Text fw={700}>Origin</Text>
         </Grid.Col>
-        <Grid.Col p={0} span={2}>
+        <Grid.Col p={0} span={1}>
           <Text fw={700}>Type</Text>
         </Grid.Col>
         <Grid.Col p={0} span={4}>
           <Text fw={700}>Destination</Text>
         </Grid.Col>
-        <Grid.Col p={0} span={2}>
+        <Grid.Col p={0} span={3}>
           <Text fw={700}>Operating Days</Text>
         </Grid.Col>
       </Grid>
