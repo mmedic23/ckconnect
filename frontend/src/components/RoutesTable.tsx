@@ -8,11 +8,13 @@ import { FindRouteResponse, RouteDto } from '@/types/route';
 import { createOptionsFromLocationsMap, SearchableSelect, SearchableSelectItem } from './SearchableSelect';
 import { RouteDetails } from './RouteDetails';
 import { TransportationTypeIcon } from './TransportationTypeIcon';
+import { DatePickerInput } from '@mantine/dates';
 
 export function RoutesTable() {
   const [locations, setLocations] = useState<LocationsMap>([]);
   const [originLocation, setOriginLocation] = useState<LocationDto | undefined>();
   const [destinationLocation, setDestinationLocation] = useState<LocationDto | undefined>();
+  const [searchDate, setSearchDate] = useState<Date | null>(new Date());
   const [isLoading, setIsLoading] = useState(false);
   const [foundRoutes, setFoundRoutes] = useState<FindRouteResponse | undefined>();
 
@@ -44,14 +46,19 @@ export function RoutesTable() {
   };
 
   const handleSearchClick = async () => {
-    if (originLocation === undefined || destinationLocation === undefined) {
+    if (originLocation === undefined || destinationLocation === undefined || searchDate === null) {
       return;
     }
     setSelectedRoute(undefined);
     setFoundRoutes(undefined);
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // TODO for debug, remove me!
-    const routesResponse = await fetch(`${apiUrl}routes?originId=${originLocation.id}&destinationId=${destinationLocation.id}`);
+    await new Promise((resolve) => setTimeout(resolve, 500)); // TODO for debug, remove me!
+    const queryParams = new URLSearchParams({
+      originId: originLocation.id.toString(),
+      destinationId: destinationLocation.id.toString(),
+      date: searchDate.toISOString().substring(0, searchDate.toISOString().length - 1)
+  });
+    const routesResponse = await fetch(`${apiUrl}routes?${queryParams.toString()}`);
     if (!routesResponse.ok) {
       console.log(await routesResponse.text());
       return;
@@ -78,11 +85,12 @@ export function RoutesTable() {
           defaultItem={null}
           onChange={handleSearchInputChanged('destination')}
         />
+        <DatePickerInput label='Pick a date' value={searchDate} onChange={setSearchDate} />
         <Button
           color="blue"
           mt="auto"
           loading={isLoading}
-          disabled={originLocation === undefined || destinationLocation === undefined}
+          disabled={originLocation === undefined || destinationLocation === undefined || searchDate === null}
           onClick={handleSearchClick}
         >
           Search
