@@ -3,6 +3,7 @@ package com.cankaratepe.ckconnect.transportation;
 import com.cankaratepe.ckconnect.location.LocationEntity;
 import jakarta.persistence.*;
 
+import java.time.DayOfWeek;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,7 @@ public class TransportationEntity {
     private LocationEntity destinationLocation;
     private TransportationType transportationType;
     @ElementCollection
-    private List<WeekDay> operatingDays;
+    private List<DayOfWeek> operatingDays;
 
     public Long getId() {
         return id;
@@ -53,11 +54,11 @@ public class TransportationEntity {
         this.transportationType = transportationType;
     }
 
-    public List<WeekDay> getOperatingDays() {
+    public List<DayOfWeek> getOperatingDays() {
         return operatingDays;
     }
 
-    public void setOperatingDays(List<WeekDay> operatingDays) {
+    public void setOperatingDays(List<DayOfWeek> operatingDays) {
         this.operatingDays = operatingDays;
     }
 }

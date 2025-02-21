@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -27,13 +29,13 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public List<RouteDTO> findRoutes(Long originId, Long destinationId) {
+    public List<RouteDTO> findRoutes(Long originId, Long destinationId, LocalDateTime date) {
         LocationDTO origin = locationService.get(originId);
         LocationDTO destination = locationService.get(destinationId);
-        return enumerateRoutes(origin, destination);
+        return enumerateRoutes(origin, destination, date.getDayOfWeek());
     }
 
-    private List<RouteDTO> enumerateRoutes(LocationDTO origin, LocationDTO destination) {
+    private List<RouteDTO> enumerateRoutes(LocationDTO origin, LocationDTO destination, DayOfWeek dayOfWeek) {
         logger.trace("Enumerating routes from {} to {}", origin, destination);
         List<RouteDTO> routes = new ArrayList<>();
 

@@ -2,6 +2,7 @@ package com.cankaratepe.ckconnect.transportation;
 
 import com.cankaratepe.ckconnect.location.LocationDTO;
 
+import java.time.DayOfWeek;
 import java.util.List;
 
 public record TransportationDTO(
@@ -9,7 +10,7 @@ public record TransportationDTO(
         LocationDTO origin,
         LocationDTO destination,
         TransportationType type,
-        List<WeekDay> operatingDays
+        List<DayOfWeek> operatingDays
 ) {
     @Override
     public String toString() {
